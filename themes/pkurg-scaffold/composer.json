@@ -1,0 +1,8 @@
+{
+    "name": "pkurg/scaffold-theme",
+    "type": "october-theme",
+    "description": "Scaffold is a modern and fresh HTML website template built with bootstrap framework. It's awesome and creative responsive HTML5 template created for business, corporate, portfolio, startup and agency websites",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}

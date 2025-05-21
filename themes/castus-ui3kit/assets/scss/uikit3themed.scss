@@ -1,0 +1,13 @@
+@import
+    "theme-variables", // variable overrides
+    "mixins-theme";
+
+// mixin overrides
+
+@mixin hook-heading-medium() {
+    color: $global-primary-background;
+}
+
+@import // UIkit themed components
+    "theme-import",
+    "components-import";

@@ -1,0 +1,9 @@
+name: Scaffold
+description: "Scaffold is a modern and fresh HTML website template built with bootstrap framework. It's awesome and creative responsive HTML5 template created for business, corporate, portfolio, startup and agency websites"
+author: Vladimir
+homepage: 'https://bootstrapmade.com/scaffold-bootstrap-metro-style-template/'
+authorCode: Pkurg
+code: scaffold
+parent: ''
+database: '0'
+form: fields.yaml
