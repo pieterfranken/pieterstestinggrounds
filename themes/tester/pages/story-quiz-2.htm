@@ -1,0 +1,341 @@
+##
+title = "Story Quiz 2"
+url = "/story-quiz-2"
+layout = "home"
+==
+<?
+function onStart()
+{
+    $this['story'] = [
+        'title' => 'The Cloud Kingdom\'s Lost Data',
+        'content' => "<p>High above the digital landscape, nestled among the virtual cumulus formations, floated the majestic Cloud Kingdom. Unlike the terrestrial data centers below, the Cloud Kingdom was a realm of infinite scalability, where information flowed freely and storage knew no bounds.</p>
+
+<p>The kingdom was ruled by the wise Queen Redundancy, who ensured that every piece of data was safely replicated across multiple availability zones. Her trusted advisors—the Load Balancer, the Firewall Guardian, and the Encryption Wizard—helped maintain the kingdom's security and efficiency.</p>
+
+<p>One ordinary processing cycle, a young data packet named Byte arrived at the royal court with alarming news. 'Your Majesty,' Byte bowed respectfully, 'the Eastern Storage Cluster reports that several terabytes of citizen data have vanished without a trace!'</p>
+
+<p>The court fell silent. Data loss was extremely rare in the Cloud Kingdom, thanks to Queen Redundancy's careful policies.</p>
+
+<p>'When did this occur?' asked the Queen, her voice steady despite her concern.</p>
+
+<p>'During the last backup window, Your Majesty. The monitoring systems detected no intrusion, and the access logs show no unauthorized requests.'</p>
+
+<p>The Firewall Guardian stepped forward, his shield glowing with active protection runes. 'I can confirm that no external threats penetrated our defenses during that time.'</p>
+
+<p>Queen Redundancy turned to the Encryption Wizard. 'Could the data have been corrupted during transmission?'</p>
+
+<p>The wizard stroked his long binary beard thoughtfully. 'Unlikely, Your Highness. Our checksum spells would have detected any corruption. This is most mysterious indeed.'</p>
+
+<p>'We must recover this data immediately,' declared the Queen. 'Assemble a search party!'</p>
+
+<p>The Load Balancer organized a team of the kingdom's finest data retrieval specialists: the Query Seeker, known for finding information in the most obscure databases; the Cache Hunter, expert in locating temporarily stored data; and the Log Reader, who could interpret the most cryptic system messages.</p>
+
+<p>Their investigation began at the Eastern Storage Cluster, a vast array of data structures stretching to the horizon. The Query Seeker ran sophisticated search algorithms but found no trace of the missing data. The Cache Hunter examined all recent memory states without success. The Log Reader discovered something odd, however—a series of scheduled tasks that had run precisely at midnight, just before the data disappeared.</p>
+
+<p>'These tasks are signed with the royal cryptographic key,' noted the Log Reader, 'but I don't recognize the command pattern.'</p>
+
+<p>The team reported back to Queen Redundancy, who was puzzled. 'I authorized no such tasks. Who could have access to the royal key?'</p>
+
+<p>At that moment, the court jester—a quirky script named Regex—cartwheeled into the throne room. 'Perhaps, Your Majesty, the answer lies not in who has the key, but when they had it.'</p>
+
+<p>The cryptic suggestion sparked a realization in the Encryption Wizard. 'Time synchronization! Quick, check the timestamp server!'</p>
+
+<p>The team rushed to the kingdom's central clock, maintained by the Time Keeper. To their shock, they discovered that the timestamp server had been subtly altered, creating a thirty-minute discrepancy in the system.</p>
+
+<p>'During that ghost time window,' explained the Encryption Wizard, 'someone could execute commands that would appear to be from the past or future, bypassing our real-time monitoring.'</p>
+
+<p>Further investigation revealed the culprit: Prince Version, the Queen's ambitious nephew, had manipulated the time server to create a window during which he copied the data to his own private cloud, hoping to start a rival kingdom.</p>
+
+<p>When confronted, Prince Version initially denied everything, but the evidence was irrefutable. The altered timestamps, the royal key access, and the suspicious network traffic to his private domain all pointed to his guilt.</p>
+
+<p>'I only wanted to prove that our security had weaknesses!' protested the Prince. 'The data was never at risk—I've kept it safe in triple-encrypted storage.'</p>
+
+<p>Queen Redundancy was both relieved and disappointed. 'Return the data immediately,' she commanded, 'and then we shall discuss your punishment.'</p>
+
+<p>The missing data was restored, and Prince Version was sentenced to six months of community service, optimizing the kingdom's backup systems—under strict supervision, of course.</p>
+
+<p>In the aftermath, Queen Redundancy implemented new security measures: multi-factor authentication for the royal key, independent time verification for critical operations, and a comprehensive audit system designed by the Log Reader.</p>
+
+<p>As for Byte, the data packet who had first reported the problem, the Queen appointed him Chief of Security Alerts, with a direct communication channel to the throne. 'Sometimes,' Queen Redundancy told her court, 'the smallest packets carry the most important messages.'</p>"
+    ];
+
+    $this['questions'] = [
+        [
+            'id' => 1,
+            'question' => 'Who ruled the Cloud Kingdom?',
+            'options' => [
+                'A' => 'King Availability',
+                'B' => 'Queen Redundancy',
+                'C' => 'Emperor Bandwidth',
+                'D' => 'Princess Latency'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 2,
+            'question' => 'What was the name of the data packet who reported the missing data?',
+            'options' => [
+                'A' => 'Bit',
+                'B' => 'Packet',
+                'C' => 'Byte',
+                'D' => 'Megabyte'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 3,
+            'question' => 'How did Prince Version bypass the real-time monitoring?',
+            'options' => [
+                'A' => 'He used a backdoor in the firewall',
+                'B' => 'He altered the timestamp server',
+                'C' => 'He bribed the Encryption Wizard',
+                'D' => 'He created a decoy data cluster'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 4,
+            'question' => 'What was Prince Version\'s punishment?',
+            'options' => [
+                'A' => 'Permanent exile from the Cloud Kingdom',
+                'B' => 'Deletion of his private cloud',
+                'C' => 'Six months of community service',
+                'D' => 'Imprisonment in the Recycle Bin'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 5,
+            'question' => 'What position was Byte appointed to after the incident?',
+            'options' => [
+                'A' => 'Royal Advisor',
+                'B' => 'Chief of Security Alerts',
+                'C' => 'Time Keeper',
+                'D' => 'Eastern Cluster Administrator'
+            ],
+            'correct' => 'B'
+        ]
+    ];
+}
+
+function onSubmitQuiz()
+{
+    $answers = post('answers', []);
+
+    // Define questions directly in this function to ensure they're available
+    $questions = [
+        [
+            'id' => 1,
+            'question' => 'Who ruled the Cloud Kingdom?',
+            'options' => [
+                'A' => 'King Availability',
+                'B' => 'Queen Redundancy',
+                'C' => 'Emperor Bandwidth',
+                'D' => 'Princess Latency'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 2,
+            'question' => 'What was the name of the data packet who reported the missing data?',
+            'options' => [
+                'A' => 'Bit',
+                'B' => 'Packet',
+                'C' => 'Byte',
+                'D' => 'Megabyte'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 3,
+            'question' => 'How did Prince Version bypass the real-time monitoring?',
+            'options' => [
+                'A' => 'He used a backdoor in the firewall',
+                'B' => 'He altered the timestamp server',
+                'C' => 'He bribed the Encryption Wizard',
+                'D' => 'He created a decoy data cluster'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 4,
+            'question' => 'What was Prince Version\'s punishment?',
+            'options' => [
+                'A' => 'Permanent exile from the Cloud Kingdom',
+                'B' => 'Deletion of his private cloud',
+                'C' => 'Six months of community service',
+                'D' => 'Imprisonment in the Recycle Bin'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 5,
+            'question' => 'What position was Byte appointed to after the incident?',
+            'options' => [
+                'A' => 'Royal Advisor',
+                'B' => 'Chief of Security Alerts',
+                'C' => 'Time Keeper',
+                'D' => 'Eastern Cluster Administrator'
+            ],
+            'correct' => 'B'
+        ]
+    ];
+
+    $score = 0;
+    $results = [];
+
+    foreach ($questions as $question) {
+        $questionId = $question['id'];
+        $userAnswer = isset($answers[$questionId]) ? $answers[$questionId] : null;
+        $isCorrect = ($userAnswer === $question['correct']);
+
+        if ($isCorrect) {
+            $score++;
+        }
+
+        $results[$questionId] = [
+            'question' => $question['question'],
+            'userAnswer' => $userAnswer,
+            'correctAnswer' => $question['correct'],
+            'isCorrect' => $isCorrect,
+            'options' => $question['options']
+        ];
+    }
+
+    $this['score'] = $score;
+    $this['totalQuestions'] = count($questions);
+    $this['percentage'] = ($score / count($questions)) * 100;
+    $this['results'] = $results;
+
+    return [
+        '#quiz-results' => $this->renderPartial('story-quiz/results')
+    ];
+}
+?>
+==
+<!-- Story Quiz Page -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">{{ story.title }}</h1>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5>Read the story carefully:</h5>
+                            <div>
+                                <button id="highlight-btn" class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-highlighter"></i> Highlight Mode
+                                </button>
+                                <button id="clear-highlights-btn" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-eraser"></i> Clear Highlights
+                                </button>
+                            </div>
+                        </div>
+                        <div id="story-content" class="story-content p-4 border rounded mb-0">
+                            {{ story.content|raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Quiz Questions</h2>
+                </div>
+                <div class="card-body">
+                    <div id="quiz-container">
+                        {% partial 'story-quiz/questions' %}
+                    </div>
+                    <div id="quiz-results">
+                        <!-- Results will be displayed here after submission -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.story-content {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    background-color: #f9f9f9;
+}
+
+.story-content p {
+    margin-bottom: 0.8rem;
+}
+
+.highlight-mode {
+    cursor: pointer;
+}
+
+.highlighted {
+    background-color: #ffeb3b;
+    padding: 2px 0;
+}
+
+.feature-icon {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #3498db;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const storyContent = document.getElementById('story-content');
+    const highlightBtn = document.getElementById('highlight-btn');
+    const clearHighlightsBtn = document.getElementById('clear-highlights-btn');
+    let highlightMode = false;
+
+    // Toggle highlight mode
+    highlightBtn.addEventListener('click', function() {
+        highlightMode = !highlightMode;
+
+        if (highlightMode) {
+            storyContent.classList.add('highlight-mode');
+            highlightBtn.classList.remove('btn-outline-warning');
+            highlightBtn.classList.add('btn-warning');
+        } else {
+            storyContent.classList.remove('highlight-mode');
+            highlightBtn.classList.remove('btn-warning');
+            highlightBtn.classList.add('btn-outline-warning');
+        }
+    });
+
+    // Handle text selection for highlighting
+    storyContent.addEventListener('mouseup', function() {
+        if (!highlightMode) return;
+
+        const selection = window.getSelection();
+        if (selection.toString().length > 0) {
+            const range = selection.getRangeAt(0);
+            const span = document.createElement('span');
+            span.className = 'highlighted';
+
+            try {
+                range.surroundContents(span);
+                selection.removeAllRanges();
+            } catch (e) {
+                console.log('Cannot highlight overlapping elements');
+            }
+        }
+    });
+
+    // Clear all highlights
+    clearHighlightsBtn.addEventListener('click', function() {
+        const highlights = storyContent.querySelectorAll('.highlighted');
+        highlights.forEach(highlight => {
+            const parent = highlight.parentNode;
+            while (highlight.firstChild) {
+                parent.insertBefore(highlight.firstChild, highlight);
+            }
+            parent.removeChild(highlight);
+        });
+    });
+});
+</script>

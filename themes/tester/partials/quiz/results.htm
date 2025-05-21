@@ -1,0 +1,78 @@
+<div class="quiz-results">
+    <div class="text-center mb-4">
+        <h2>Your Quiz Results</h2>
+        <p class="lead">You scored {{ score }} out of {{ totalQuestions }}</p>
+
+        <div class="progress mb-3" style="height: 30px;">
+            <div
+                class="progress-bar {% if percentage < 50 %}bg-danger{% elseif percentage < 80 %}bg-warning{% else %}bg-success{% endif %}"
+                role="progressbar"
+                style="width: {{ percentage }}%;"
+                aria-valuenow="{{ percentage }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            >
+                {{ percentage|round }}%
+            </div>
+        </div>
+
+        {% if percentage == 100 %}
+            <div class="alert alert-success">
+                <strong>Perfect score!</strong> Congratulations, you got all the answers correct!
+            </div>
+        {% elseif percentage >= 80 %}
+            <div class="alert alert-success">
+                <strong>Great job!</strong> You have a good understanding of the topics.
+            </div>
+        {% elseif percentage >= 50 %}
+            <div class="alert alert-warning">
+                <strong>Good effort!</strong> You're on the right track, but there's room for improvement.
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                <strong>Keep studying!</strong> You might want to review the material and try again.
+            </div>
+        {% endif %}
+    </div>
+
+    <h3 class="mb-3">Review Your Answers</h3>
+
+    {% for id, result in results %}
+        <div class="card mb-3 {% if result.isCorrect %}border-success{% else %}border-danger{% endif %}">
+            <div class="card-header {% if result.isCorrect %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+                <h5 class="mb-0">Question {{ id }}: {{ result.isCorrect ? 'Correct' : 'Incorrect' }}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><strong>{{ result.question }}</strong></p>
+
+                <ul class="list-group mb-3">
+                    {% for key, option in result.options %}
+                        <li class="list-group-item
+                            {% if key == result.correctAnswer %}list-group-item-success{% endif %}
+                            {% if key == result.userAnswer and not result.isCorrect %}list-group-item-danger{% endif %}
+                        ">
+                            {{ key }}. {{ option }}
+
+                            {% if key == result.correctAnswer %}
+                                <span class="badge bg-success float-end">Correct Answer</span>
+                            {% endif %}
+
+                            {% if key == result.userAnswer and not result.isCorrect %}
+                                <span class="badge bg-danger float-end">Your Answer</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="d-grid gap-2 mt-4">
+        <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg">Take Quiz Again</a>
+    </div>
+
+    <script>
+        // Make sure the quiz container is hidden when results are shown
+        document.getElementById('quiz-container').style.display = 'none';
+    </script>
+</div>

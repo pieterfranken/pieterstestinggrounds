@@ -1,0 +1,35 @@
+<form
+    data-request="onSubmitQuiz"
+    data-request-update="'quiz/results': '#quiz-results'"
+    data-request-success="document.getElementById('quiz-container').style.display = 'none';"
+    data-request-error="alert('An error occurred: ' + errorMsg);"
+>
+    <p class="lead mb-4">Test your knowledge with this multiple choice quiz. Select one answer for each question.</p>
+
+    {% for question in questions %}
+        <div class="mb-4">
+            <h5 class="mb-3">{{ question.id }}. {{ question.question }}</h5>
+
+            <div class="list-group">
+                {% for key, option in question.options %}
+                    <label class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <input
+                                type="radio"
+                                name="answers[{{ question.id }}]"
+                                value="{{ key }}"
+                                class="form-check-input me-2"
+                                required
+                            >
+                            <span>{{ key }}. {{ option }}</span>
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="d-grid gap-2 mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">Submit Answers</button>
+    </div>
+</form>

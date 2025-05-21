@@ -1,0 +1,182 @@
+##
+title = "Quiz"
+url = "/quiz"
+layout = "home"
+==
+<?
+function onStart()
+{
+    $this['questions'] = [
+        [
+            'id' => 1,
+            'question' => 'What is the capital of France?',
+            'options' => [
+                'A' => 'London',
+                'B' => 'Berlin',
+                'C' => 'Paris',
+                'D' => 'Madrid'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 2,
+            'question' => 'Which planet is known as the Red Planet?',
+            'options' => [
+                'A' => 'Venus',
+                'B' => 'Mars',
+                'C' => 'Jupiter',
+                'D' => 'Saturn'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 3,
+            'question' => 'What is the largest mammal in the world?',
+            'options' => [
+                'A' => 'Elephant',
+                'B' => 'Giraffe',
+                'C' => 'Blue Whale',
+                'D' => 'Polar Bear'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 4,
+            'question' => 'Which of these is not a programming language?',
+            'options' => [
+                'A' => 'Python',
+                'B' => 'Java',
+                'C' => 'Cobra',
+                'D' => 'Dolphin'
+            ],
+            'correct' => 'D'
+        ],
+        [
+            'id' => 5,
+            'question' => 'What year was October CMS first released?',
+            'options' => [
+                'A' => '2010',
+                'B' => '2013',
+                'C' => '2015',
+                'D' => '2018'
+            ],
+            'correct' => 'B'
+        ]
+    ];
+}
+
+function onSubmitQuiz()
+{
+    $answers = post('answers', []);
+
+    // Define questions directly in this function to ensure they're available
+    $questions = [
+        [
+            'id' => 1,
+            'question' => 'What is the capital of France?',
+            'options' => [
+                'A' => 'London',
+                'B' => 'Berlin',
+                'C' => 'Paris',
+                'D' => 'Madrid'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 2,
+            'question' => 'Which planet is known as the Red Planet?',
+            'options' => [
+                'A' => 'Venus',
+                'B' => 'Mars',
+                'C' => 'Jupiter',
+                'D' => 'Saturn'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 3,
+            'question' => 'What is the largest mammal in the world?',
+            'options' => [
+                'A' => 'Elephant',
+                'B' => 'Giraffe',
+                'C' => 'Blue Whale',
+                'D' => 'Polar Bear'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 4,
+            'question' => 'Which of these is not a programming language?',
+            'options' => [
+                'A' => 'Python',
+                'B' => 'Java',
+                'C' => 'Cobra',
+                'D' => 'Dolphin'
+            ],
+            'correct' => 'D'
+        ],
+        [
+            'id' => 5,
+            'question' => 'What year was October CMS first released?',
+            'options' => [
+                'A' => '2010',
+                'B' => '2013',
+                'C' => '2015',
+                'D' => '2018'
+            ],
+            'correct' => 'B'
+        ]
+    ];
+
+    $score = 0;
+    $results = [];
+
+    foreach ($questions as $question) {
+        $questionId = $question['id'];
+        $userAnswer = isset($answers[$questionId]) ? $answers[$questionId] : null;
+        $isCorrect = ($userAnswer === $question['correct']);
+
+        if ($isCorrect) {
+            $score++;
+        }
+
+        $results[$questionId] = [
+            'question' => $question['question'],
+            'userAnswer' => $userAnswer,
+            'correctAnswer' => $question['correct'],
+            'isCorrect' => $isCorrect,
+            'options' => $question['options']
+        ];
+    }
+
+    $this['score'] = $score;
+    $this['totalQuestions'] = count($questions);
+    $this['percentage'] = ($score / count($questions)) * 100;
+    $this['results'] = $results;
+
+    return [
+        '#quiz-results' => $this->renderPartial('quiz/results')
+    ];
+}
+?>
+==
+<!-- Quiz Page -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">Multiple Choice Quiz</h1>
+                </div>
+                <div class="card-body">
+                    <div id="quiz-container">
+                        {% partial 'quiz/questions' %}
+                    </div>
+                    <div id="quiz-results">
+                        <!-- Results will be displayed here after submission -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

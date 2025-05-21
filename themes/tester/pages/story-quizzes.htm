@@ -1,0 +1,75 @@
+##
+title = "Story Quizzes"
+url = "/story-quizzes"
+layout = "home"
+==
+<?
+function onStart()
+{
+    $this['quizzes'] = [
+        [
+            'id' => 1,
+            'title' => 'The Mysterious Bug in the Digital Realm',
+            'description' => 'Follow the debugging team as they track down a malicious bug causing chaos in Byteville.',
+            'difficulty' => 'Beginner',
+            'url' => 'story-quiz',
+            'image' => 'https://via.placeholder.com/800x450?text=Digital+Realm'
+        ],
+        [
+            'id' => 2,
+            'title' => 'The Cloud Kingdom\'s Lost Data',
+            'description' => 'Join the investigation to recover missing data in the Cloud Kingdom and uncover the royal conspiracy.',
+            'difficulty' => 'Intermediate',
+            'url' => 'story-quiz-2',
+            'image' => 'https://via.placeholder.com/800x450?text=Cloud+Kingdom'
+        ]
+    ];
+}
+?>
+==
+<!-- Story Quizzes Index Page -->
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1>Interactive Story Quizzes</h1>
+            <p class="lead">Enhance your reading comprehension and test your knowledge with our collection of tech-themed story quizzes. Each quiz features text highlighting functionality to help you study important details.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for quiz in quizzes %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ quiz.image }}" class="card-img-top" alt="{{ quiz.title }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0">{{ quiz.title }}</h5>
+                            <span class="badge bg-primary">{{ quiz.difficulty }}</span>
+                        </div>
+                        <p class="card-text">{{ quiz.description }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="{{ quiz.url|page }}" class="btn btn-primary d-block">Start Quiz</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h4><i class="bi bi-lightbulb"></i> How to Use the Story Quizzes</h4>
+                    <ol>
+                        <li><strong>Read the story carefully</strong> - Pay attention to details, characters, and events.</li>
+                        <li><strong>Use the highlighting tool</strong> - Click the "Highlight Mode" button to activate, then select text to highlight important information.</li>
+                        <li><strong>Answer the questions</strong> - Test your comprehension with multiple-choice questions based on the story.</li>
+                        <li><strong>Review your results</strong> - See your score and learn from any mistakes.</li>
+                    </ol>
+                    <p class="mb-0">These interactive quizzes are designed to improve your reading comprehension and attention to detail - skills that are essential for debugging and problem-solving in the tech world!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

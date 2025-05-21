@@ -1,0 +1,335 @@
+##
+title = "Story Quiz"
+url = "/story-quiz"
+layout = "home"
+==
+<?
+function onStart()
+{
+    $this['story'] = [
+        'title' => 'The Mysterious Bug in the Digital Realm',
+        'content' => "<p>In the heart of the Digital Realm, a place where code came to life, there existed a thriving metropolis known as Byteville. The city was a marvel of engineering, with towering data structures, elegant algorithm boulevards, and bustling function districts. Citizens of Byteville—programs of all types—lived in harmony under the watchful eye of the System Administrator.</p>
+
+<p>One peculiar morning, as the system clock struck 08:00, something unusual happened. The normally efficient traffic lights at Logic Junction began to malfunction. Instead of following their regular red-green-yellow pattern, they flickered randomly, causing chaos among the commuting programs.</p>
+
+<p>\"This is most irregular,\" muttered SQL Query, a database manager who was now stuck in an unexpected traffic loop. Beside him, a young JavaScript function named EventHandler looked concerned.</p>
+
+<p>\"I've never seen anything like this,\" EventHandler said, watching as a group of Boolean variables collided, their values flipping from true to false upon impact. \"The System Administrator needs to know about this immediately!\"</p>
+
+<p>The news of the malfunction spread quickly through Byteville. By midday, reports came in of similar issues across the city: cache memory leaking in the Storage District, random crashes in the Gaming Quarter, and worst of all, the Authentication Gateway was letting programs pass without proper credentials.</p>
+
+<p>The System Administrator called an emergency meeting with the city's elite debugging team: Captain Exception, Binary Sleuth, and the renowned Dr. Overflow, a specialist in fixing the most complex bugs.</p>
+
+<p>\"We're dealing with something I've never encountered before,\" the System Administrator explained, displaying logs of the incidents on the main screen. \"The errors don't follow any pattern I can recognize.\"</p>
+
+<p>Dr. Overflow adjusted her spectacles and studied the logs carefully. \"Look here,\" she pointed to a sequence of timestamps. \"The malfunctions all occur exactly 12.57 seconds apart. This isn't random—it's deliberate.\"</p>
+
+<p>\"A virus?\" asked Captain Exception, always ready to catch and handle problems.</p>
+
+<p>\"Not quite,\" replied Binary Sleuth, who had been silently analyzing the data. \"The affected systems don't show signs of external corruption. This looks more like...\" he paused dramatically, \"a logic bomb.\"</p>
+
+<p>The room fell silent. Logic bombs were rare but devastating—pieces of code designed to trigger under specific conditions, causing widespread system failure.</p>
+
+<p>\"We need to find the trigger condition and the source,\" Dr. Overflow declared. \"Binary, you track the origin. Captain, contain the affected areas. I'll work on identifying the trigger pattern.\"</p>
+
+<p>As the team dispersed, EventHandler, who had been invited to observe the meeting due to his firsthand account, approached Dr. Overflow. \"I want to help,\" he said earnestly. \"I noticed something odd just before the traffic lights malfunctioned—a packet of data that didn't belong, moving against the normal flow of traffic.\"</p>
+
+<p>Dr. Overflow's eyes widened. \"That could be our clue! Show me exactly where you saw this.\"</p>
+
+<p>EventHandler led Dr. Overflow back to Logic Junction, where they set up monitoring equipment. After hours of waiting, they spotted it—a small, inconspicuous data packet with an unusual signature.</p>
+
+<p>\"There!\" EventHandler pointed excitedly. \"That's not supposed to be here!\"</p>
+
+<p>Dr. Overflow quickly captured the packet and examined its contents. Inside was a cleverly disguised recursive function that triggered itself every 12.57 seconds, gradually corrupting system resources.</p>
+
+<p>\"The signature,\" she whispered, recognizing the coding style. \"This was created by Infinite Loop, a notorious bug creator who escaped the Recycle Bin last month.\"</p>
+
+<p>Armed with this knowledge, the debugging team created a specialized patch that identified and neutralized the recursive function. Within hours, Byteville returned to normal, traffic flowed smoothly, and the Authentication Gateway was secure once more.</p>
+
+<p>The System Administrator commended the team, especially acknowledging EventHandler's crucial observation. \"Sometimes the smallest details lead to the biggest discoveries,\" she said, awarding him an honorary position on the debugging team.</p>
+
+<p>As for Infinite Loop, Binary Sleuth tracked him to an abandoned server on the edge of the Digital Realm. The authorities were closing in, ensuring that Byteville would remain safe from his mischievous code for the foreseeable future.</p>
+
+<p>In the days that followed, EventHandler often reflected on the adventure. He had learned an important lesson: in the world of programming, attention to detail wasn't just good practice—it could save an entire digital city from disaster.</p>"
+    ];
+
+    $this['questions'] = [
+        [
+            'id' => 1,
+            'question' => 'What was the name of the city in the Digital Realm?',
+            'options' => [
+                'A' => 'Codeville',
+                'B' => 'Byteville',
+                'C' => 'Programton',
+                'D' => 'Algorithmia'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 2,
+            'question' => 'What was the time interval between malfunctions?',
+            'options' => [
+                'A' => '10.57 seconds',
+                'B' => '12.57 seconds',
+                'C' => '15.57 seconds',
+                'D' => '20.57 seconds'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 3,
+            'question' => 'Who was responsible for creating the bug?',
+            'options' => [
+                'A' => 'Captain Exception',
+                'B' => 'Binary Sleuth',
+                'C' => 'Infinite Loop',
+                'D' => 'Dr. Overflow'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 4,
+            'question' => 'What type of malicious code was affecting Byteville?',
+            'options' => [
+                'A' => 'Virus',
+                'B' => 'Worm',
+                'C' => 'Trojan Horse',
+                'D' => 'Logic Bomb'
+            ],
+            'correct' => 'D'
+        ],
+        [
+            'id' => 5,
+            'question' => 'Who first noticed the unusual data packet?',
+            'options' => [
+                'A' => 'SQL Query',
+                'B' => 'EventHandler',
+                'C' => 'System Administrator',
+                'D' => 'Dr. Overflow'
+            ],
+            'correct' => 'B'
+        ]
+    ];
+}
+
+function onSubmitQuiz()
+{
+    $answers = post('answers', []);
+
+    // Define questions directly in this function to ensure they're available
+    $questions = [
+        [
+            'id' => 1,
+            'question' => 'What was the name of the city in the Digital Realm?',
+            'options' => [
+                'A' => 'Codeville',
+                'B' => 'Byteville',
+                'C' => 'Programton',
+                'D' => 'Algorithmia'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 2,
+            'question' => 'What was the time interval between malfunctions?',
+            'options' => [
+                'A' => '10.57 seconds',
+                'B' => '12.57 seconds',
+                'C' => '15.57 seconds',
+                'D' => '20.57 seconds'
+            ],
+            'correct' => 'B'
+        ],
+        [
+            'id' => 3,
+            'question' => 'Who was responsible for creating the bug?',
+            'options' => [
+                'A' => 'Captain Exception',
+                'B' => 'Binary Sleuth',
+                'C' => 'Infinite Loop',
+                'D' => 'Dr. Overflow'
+            ],
+            'correct' => 'C'
+        ],
+        [
+            'id' => 4,
+            'question' => 'What type of malicious code was affecting Byteville?',
+            'options' => [
+                'A' => 'Virus',
+                'B' => 'Worm',
+                'C' => 'Trojan Horse',
+                'D' => 'Logic Bomb'
+            ],
+            'correct' => 'D'
+        ],
+        [
+            'id' => 5,
+            'question' => 'Who first noticed the unusual data packet?',
+            'options' => [
+                'A' => 'SQL Query',
+                'B' => 'EventHandler',
+                'C' => 'System Administrator',
+                'D' => 'Dr. Overflow'
+            ],
+            'correct' => 'B'
+        ]
+    ];
+
+    $score = 0;
+    $results = [];
+
+    foreach ($questions as $question) {
+        $questionId = $question['id'];
+        $userAnswer = isset($answers[$questionId]) ? $answers[$questionId] : null;
+        $isCorrect = ($userAnswer === $question['correct']);
+
+        if ($isCorrect) {
+            $score++;
+        }
+
+        $results[$questionId] = [
+            'question' => $question['question'],
+            'userAnswer' => $userAnswer,
+            'correctAnswer' => $question['correct'],
+            'isCorrect' => $isCorrect,
+            'options' => $question['options']
+        ];
+    }
+
+    $this['score'] = $score;
+    $this['totalQuestions'] = count($questions);
+    $this['percentage'] = ($score / count($questions)) * 100;
+    $this['results'] = $results;
+
+    return [
+        '#quiz-results' => $this->renderPartial('story-quiz/results')
+    ];
+}
+?>
+==
+<!-- Story Quiz Page -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">{{ story.title }}</h1>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5>Read the story carefully:</h5>
+                            <div>
+                                <button id="highlight-btn" class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-highlighter"></i> Highlight Mode
+                                </button>
+                                <button id="clear-highlights-btn" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-eraser"></i> Clear Highlights
+                                </button>
+                            </div>
+                        </div>
+                        <div id="story-content" class="story-content p-4 border rounded mb-0">
+                            {{ story.content|raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Quiz Questions</h2>
+                </div>
+                <div class="card-body">
+                    <div id="quiz-container">
+                        {% partial 'story-quiz/questions' %}
+                    </div>
+                    <div id="quiz-results">
+                        <!-- Results will be displayed here after submission -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.story-content {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    background-color: #f9f9f9;
+}
+
+.story-content p {
+    margin-bottom: 0.8rem;
+}
+
+.highlight-mode {
+    cursor: pointer;
+}
+
+.highlighted {
+    background-color: #ffeb3b;
+    padding: 2px 0;
+}
+
+.feature-icon {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #3498db;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const storyContent = document.getElementById('story-content');
+    const highlightBtn = document.getElementById('highlight-btn');
+    const clearHighlightsBtn = document.getElementById('clear-highlights-btn');
+    let highlightMode = false;
+
+    // Toggle highlight mode
+    highlightBtn.addEventListener('click', function() {
+        highlightMode = !highlightMode;
+
+        if (highlightMode) {
+            storyContent.classList.add('highlight-mode');
+            highlightBtn.classList.remove('btn-outline-warning');
+            highlightBtn.classList.add('btn-warning');
+        } else {
+            storyContent.classList.remove('highlight-mode');
+            highlightBtn.classList.remove('btn-warning');
+            highlightBtn.classList.add('btn-outline-warning');
+        }
+    });
+
+    // Handle text selection for highlighting
+    storyContent.addEventListener('mouseup', function() {
+        if (!highlightMode) return;
+
+        const selection = window.getSelection();
+        if (selection.toString().length > 0) {
+            const range = selection.getRangeAt(0);
+            const span = document.createElement('span');
+            span.className = 'highlighted';
+
+            try {
+                range.surroundContents(span);
+                selection.removeAllRanges();
+            } catch (e) {
+                console.log('Cannot highlight overlapping elements');
+            }
+        }
+    });
+
+    // Clear all highlights
+    clearHighlightsBtn.addEventListener('click', function() {
+        const highlights = storyContent.querySelectorAll('.highlighted');
+        highlights.forEach(highlight => {
+            const parent = highlight.parentNode;
+            while (highlight.firstChild) {
+                parent.insertBefore(highlight.firstChild, highlight);
+            }
+            parent.removeChild(highlight);
+        });
+    });
+});
+</script>
