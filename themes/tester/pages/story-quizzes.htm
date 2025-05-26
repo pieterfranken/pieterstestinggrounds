@@ -12,16 +12,14 @@ function onStart()
             'title' => 'The Mysterious Bug in the Digital Realm',
             'description' => 'Follow the debugging team as they track down a malicious bug causing chaos in Byteville.',
             'difficulty' => 'Beginner',
-            'url' => 'story-quiz',
-            'image' => 'https://via.placeholder.com/800x450?text=Digital+Realm'
+            'url' => 'story-quiz'
         ],
         [
             'id' => 2,
             'title' => 'The Cloud Kingdom\'s Lost Data',
             'description' => 'Join the investigation to recover missing data in the Cloud Kingdom and uncover the royal conspiracy.',
             'difficulty' => 'Intermediate',
-            'url' => 'story-quiz-2',
-            'image' => 'https://via.placeholder.com/800x450?text=Cloud+Kingdom'
+            'url' => 'story-quiz-2'
         ]
     ];
 }
@@ -40,7 +38,6 @@ function onStart()
         {% for quiz in quizzes %}
             <div class="col-md-6 mb-4">
                 <div class="card h-100 shadow-sm">
-                    <img src="{{ quiz.image }}" class="card-img-top" alt="{{ quiz.title }}">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5 class="card-title mb-0">{{ quiz.title }}</h5>
@@ -63,7 +60,12 @@ function onStart()
                     <h4><i class="bi bi-lightbulb"></i> How to Use the Story Quizzes</h4>
                     <ol>
                         <li><strong>Read the story carefully</strong> - Pay attention to details, characters, and events.</li>
-                        <li><strong>Use the highlighting tool</strong> - Click the "Highlight Mode" button to activate, then select text to highlight important information.</li>
+                        <li><strong>Use the highlighting tool</strong> - Click the "Highlight Mode" button to activate, then:
+                            <ul class="mt-2">
+                                <li><strong>On desktop:</strong> Select text with your mouse to highlight important information</li>
+                                <li><strong>On mobile:</strong> Touch and drag your finger across text to draw highlight marks</li>
+                            </ul>
+                        </li>
                         <li><strong>Answer the questions</strong> - Test your comprehension with multiple-choice questions based on the story.</li>
                         <li><strong>Review your results</strong> - See your score and learn from any mistakes.</li>
                     </ol>

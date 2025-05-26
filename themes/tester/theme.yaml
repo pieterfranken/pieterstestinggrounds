@@ -1,8 +1,8 @@
 name: tester
-description: ''
-author: ''
+description: 'PTG Minimalist Theme - A clean, functional foundation for Pieters Testing Grounds with essential navigation and core content areas.'
+author: 'PTG Team'
 homepage: ''
-authorCode: ''
-code: ''
+authorCode: 'ptg'
+code: 'tester-minimalist'
 parent: ''
 database: '0'

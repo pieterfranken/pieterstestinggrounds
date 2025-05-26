@@ -263,19 +263,30 @@ function onSubmitQuiz()
     font-size: 1.05rem;
     line-height: 1.7;
     background-color: #f9f9f9;
+    position: relative; /* Required for canvas positioning */
 }
 
 .story-content p {
     margin-bottom: 0.8rem;
+    position: relative; /* Ensure text appears above canvas */
+    z-index: 2;
 }
 
+.story-content * {
+    position: relative; /* Ensure all text content appears above canvas */
+    z-index: 2;
+}
+
+/* Unified highlighting cursor for all devices */
 .highlight-mode {
-    cursor: pointer;
+    cursor: crosshair !important;
 }
 
+/* Legacy highlighted spans (for backward compatibility) */
 .highlighted {
     background-color: #ffeb3b;
     padding: 2px 0;
+    opacity: 0.4;
 }
 
 .feature-icon {
@@ -285,57 +296,4 @@ function onSubmitQuiz()
 }
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const storyContent = document.getElementById('story-content');
-    const highlightBtn = document.getElementById('highlight-btn');
-    const clearHighlightsBtn = document.getElementById('clear-highlights-btn');
-    let highlightMode = false;
-
-    // Toggle highlight mode
-    highlightBtn.addEventListener('click', function() {
-        highlightMode = !highlightMode;
-
-        if (highlightMode) {
-            storyContent.classList.add('highlight-mode');
-            highlightBtn.classList.remove('btn-outline-warning');
-            highlightBtn.classList.add('btn-warning');
-        } else {
-            storyContent.classList.remove('highlight-mode');
-            highlightBtn.classList.remove('btn-warning');
-            highlightBtn.classList.add('btn-outline-warning');
-        }
-    });
-
-    // Handle text selection for highlighting
-    storyContent.addEventListener('mouseup', function() {
-        if (!highlightMode) return;
-
-        const selection = window.getSelection();
-        if (selection.toString().length > 0) {
-            const range = selection.getRangeAt(0);
-            const span = document.createElement('span');
-            span.className = 'highlighted';
-
-            try {
-                range.surroundContents(span);
-                selection.removeAllRanges();
-            } catch (e) {
-                console.log('Cannot highlight overlapping elements');
-            }
-        }
-    });
-
-    // Clear all highlights
-    clearHighlightsBtn.addEventListener('click', function() {
-        const highlights = storyContent.querySelectorAll('.highlighted');
-        highlights.forEach(highlight => {
-            const parent = highlight.parentNode;
-            while (highlight.firstChild) {
-                parent.insertBefore(highlight.firstChild, highlight);
-            }
-            parent.removeChild(highlight);
-        });
-    });
-});
-</script>
+<script src="{{ 'assets/js/story-highlighting.js'|theme }}"></script>
