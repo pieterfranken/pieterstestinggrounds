@@ -1,7 +1,7 @@
 <div class="quiz-results">
     <div class="text-center mb-4">
         <h2>Your Quiz Results</h2>
-        <p class="lead">You scored {{ score }} out of {{ totalQuestions }}</p>
+        <p class="lead">You scored {{ score }} out of {{ totalQuestions }} on this randomized quiz</p>
 
         <div class="progress mb-3" style="height: 30px;">
             <div
@@ -68,7 +68,7 @@
     {% endfor %}
 
     <div class="d-grid gap-2 mt-4">
-        <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg">Take Quiz Again</a>
+        <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg">Take New Random Quiz</a>
     </div>
 
     <script>

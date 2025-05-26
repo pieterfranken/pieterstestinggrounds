@@ -225,7 +225,8 @@ function onSubmitQuiz()
                     <div class="mb-2">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5>Read the story carefully:</h5>
-                            <div>
+                            <div class="d-none d-md-block">
+                                <!-- Desktop buttons (original position) -->
                                 <button id="highlight-btn" class="btn btn-sm btn-outline-warning">
                                     <i class="bi bi-highlighter"></i> Highlight Mode
                                 </button>
@@ -239,6 +240,16 @@ function onSubmitQuiz()
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Floating Toolbar for Mobile -->
+            <div class="floating-highlight-toolbar d-md-none">
+                <button id="highlight-btn-mobile" class="btn btn-warning floating-btn">
+                    <i class="bi bi-highlighter"></i>
+                </button>
+                <button id="clear-highlights-btn-mobile" class="btn btn-secondary floating-btn">
+                    <i class="bi bi-eraser"></i>
+                </button>
             </div>
 
             <div class="card">
@@ -293,6 +304,68 @@ function onSubmitQuiz()
     margin-bottom: 20px;
     text-align: center;
     color: #3498db;
+}
+
+/* Floating Toolbar for Mobile */
+.floating-highlight-toolbar {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none; /* Allow clicks to pass through the container */
+}
+
+.floating-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: none;
+    pointer-events: auto; /* Re-enable clicks on the buttons themselves */
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.floating-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.floating-btn:active {
+    transform: translateY(0);
+}
+
+/* Ensure floating buttons appear above canvas and content */
+.floating-highlight-toolbar {
+    z-index: 1001;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+    .floating-highlight-toolbar {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .floating-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Hide floating toolbar on desktop */
+@media (min-width: 768px) {
+    .floating-highlight-toolbar {
+        display: none !important;
+    }
 }
 </style>
 

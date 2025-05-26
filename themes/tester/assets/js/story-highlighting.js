@@ -7,6 +7,10 @@ class StoryHighlighter {
         this.storyContent = document.getElementById(contentElementId);
         this.highlightBtn = document.getElementById(highlightBtnId);
         this.clearHighlightsBtn = document.getElementById(clearBtnId);
+
+        // Also get mobile buttons if they exist
+        this.highlightBtnMobile = document.getElementById(highlightBtnId + '-mobile');
+        this.clearHighlightsBtnMobile = document.getElementById(clearBtnId + '-mobile');
         this.highlightMode = false;
         this.isMobile = this.detectMobile();
         this.isDrawing = false;
@@ -15,6 +19,8 @@ class StoryHighlighter {
         this.canvasContext = null;
         this.highlightColor = '#ffeb3b';
         this.highlightOpacity = 0.6; // Increased opacity since canvas is now behind text
+        this.highlightStrokes = []; // Store all highlight strokes for persistence
+        this.resizeTimeout = null; // For throttling resize events
 
         this.init();
     }
@@ -49,15 +55,29 @@ class StoryHighlighter {
     setupEventListeners() {
         console.log('Setting up event listeners'); // Debug log
 
-        // Toggle highlight mode
+        // Toggle highlight mode - desktop buttons
         this.highlightBtn.addEventListener('click', () => {
             this.toggleHighlightMode();
         });
 
-        // Clear highlights
+        // Clear highlights - desktop buttons
         this.clearHighlightsBtn.addEventListener('click', () => {
             this.clearAllHighlights();
         });
+
+        // Toggle highlight mode - mobile buttons (if they exist)
+        if (this.highlightBtnMobile) {
+            this.highlightBtnMobile.addEventListener('click', () => {
+                this.toggleHighlightMode();
+            });
+        }
+
+        // Clear highlights - mobile buttons (if they exist)
+        if (this.clearHighlightsBtnMobile) {
+            this.clearHighlightsBtnMobile.addEventListener('click', () => {
+                this.clearAllHighlights();
+            });
+        }
 
         // Set up both mobile and desktop events for testing
         if (this.isMobile) {
@@ -100,24 +120,14 @@ class StoryHighlighter {
 
         this.resizeCanvas();
 
-        // Test canvas by drawing a visible test stroke
-        this.canvasContext.strokeStyle = '#ff0000';
-        this.canvasContext.lineWidth = 5;
-        this.canvasContext.globalAlpha = 1.0;
-        this.canvasContext.beginPath();
-        this.canvasContext.moveTo(20, 20);
-        this.canvasContext.lineTo(100, 20);
-        this.canvasContext.stroke();
-        this.canvasContext.beginPath();
-        this.canvasContext.moveTo(20, 30);
-        this.canvasContext.lineTo(100, 30);
-        this.canvasContext.stroke();
-        console.log('Test strokes drawn on canvas at (20,20) and (20,30)'); // Debug log
-        console.log('Canvas dimensions:', this.highlightCanvas.width, 'x', this.highlightCanvas.height); // Debug log
-
-        // Resize canvas when window resizes
+        // Throttled resize canvas when window resizes
         window.addEventListener('resize', () => {
-            this.resizeCanvas();
+            this.throttledResize();
+        });
+
+        // Also listen for scroll events that might affect canvas positioning
+        this.storyContent.addEventListener('scroll', () => {
+            this.throttledResize();
         });
 
         console.log('Canvas setup complete'); // Debug log
@@ -126,11 +136,43 @@ class StoryHighlighter {
     resizeCanvas() {
         if (!this.highlightCanvas) return;
 
-        const rect = this.storyContent.getBoundingClientRect();
-        this.highlightCanvas.width = this.storyContent.scrollWidth;
-        this.highlightCanvas.height = this.storyContent.scrollHeight;
-        this.highlightCanvas.style.width = this.storyContent.scrollWidth + 'px';
-        this.highlightCanvas.style.height = this.storyContent.scrollHeight + 'px';
+        const newWidth = this.storyContent.scrollWidth;
+        const newHeight = this.storyContent.scrollHeight;
+
+        // Only resize if dimensions actually changed to avoid unnecessary clearing
+        if (this.highlightCanvas.width === newWidth && this.highlightCanvas.height === newHeight) {
+            console.log('Canvas resize skipped - dimensions unchanged'); // Debug log
+            return;
+        }
+
+        console.log('Canvas resizing from', this.highlightCanvas.width, 'x', this.highlightCanvas.height, 'to', newWidth, 'x', newHeight); // Debug log
+
+        // Save current highlights before resizing (which clears the canvas)
+        const savedStrokes = [...this.highlightStrokes];
+
+        // Resize canvas (this will clear all content)
+        this.highlightCanvas.width = newWidth;
+        this.highlightCanvas.height = newHeight;
+        this.highlightCanvas.style.width = newWidth + 'px';
+        this.highlightCanvas.style.height = newHeight + 'px';
+
+        // Restore all highlights after resize
+        this.redrawAllHighlights();
+
+        console.log('Canvas resized and highlights restored'); // Debug log
+    }
+
+    throttledResize() {
+        // Clear any existing timeout
+        if (this.resizeTimeout) {
+            clearTimeout(this.resizeTimeout);
+        }
+
+        // Set a new timeout to resize after a brief delay
+        this.resizeTimeout = setTimeout(() => {
+            this.resizeCanvas();
+            this.resizeTimeout = null;
+        }, 100); // 100ms delay to throttle resize events
     }
 
     setupMobileEvents() {
@@ -199,8 +241,16 @@ class StoryHighlighter {
 
         if (this.highlightMode) {
             this.storyContent.classList.add('highlight-mode');
+
+            // Update desktop buttons
             this.highlightBtn.classList.remove('btn-outline-warning');
             this.highlightBtn.classList.add('btn-warning');
+
+            // Update mobile buttons (if they exist)
+            if (this.highlightBtnMobile) {
+                this.highlightBtnMobile.classList.remove('btn-outline-warning');
+                this.highlightBtnMobile.classList.add('btn-warning');
+            }
 
             // Disable text selection for both platforms (canvas stays behind, doesn't intercept events)
             this.storyContent.style.userSelect = 'none';
@@ -211,8 +261,16 @@ class StoryHighlighter {
             console.log('Highlight mode enabled, events should be active'); // Debug log
         } else {
             this.storyContent.classList.remove('highlight-mode');
+
+            // Update desktop buttons
             this.highlightBtn.classList.remove('btn-warning');
             this.highlightBtn.classList.add('btn-outline-warning');
+
+            // Update mobile buttons (if they exist)
+            if (this.highlightBtnMobile) {
+                this.highlightBtnMobile.classList.remove('btn-warning');
+                this.highlightBtnMobile.classList.add('btn-outline-warning');
+            }
 
             // Re-enable text selection
             this.storyContent.style.userSelect = '';
@@ -262,25 +320,52 @@ class StoryHighlighter {
 
         console.log('Drawing from', this.lastDrawPoint, 'to', currentPoint); // Debug log
 
+        // Store this stroke for persistence
+        const stroke = {
+            from: { ...this.lastDrawPoint },
+            to: { ...currentPoint },
+            color: this.highlightColor,
+            opacity: this.highlightOpacity,
+            lineWidth: 25
+        };
+        this.highlightStrokes.push(stroke);
+
+        // Draw the stroke on canvas
+        this.drawStroke(stroke);
+
+        console.log('Canvas stroke drawn and stored'); // Debug log
+
+        this.lastDrawPoint = currentPoint;
+    }
+
+    drawStroke(stroke) {
         // Use source-over to prevent overlap darkening and apply consistent opacity
         this.canvasContext.globalCompositeOperation = 'source-over';
-        this.canvasContext.globalAlpha = this.highlightOpacity;
-        this.canvasContext.strokeStyle = this.highlightColor;
-        this.canvasContext.lineWidth = 25; // Wider stroke for better visibility behind text
+        this.canvasContext.globalAlpha = stroke.opacity;
+        this.canvasContext.strokeStyle = stroke.color;
+        this.canvasContext.lineWidth = stroke.lineWidth;
         this.canvasContext.lineCap = 'round';
         this.canvasContext.lineJoin = 'round';
 
         this.canvasContext.beginPath();
-        this.canvasContext.moveTo(this.lastDrawPoint.x, this.lastDrawPoint.y);
-        this.canvasContext.lineTo(currentPoint.x, currentPoint.y);
+        this.canvasContext.moveTo(stroke.from.x, stroke.from.y);
+        this.canvasContext.lineTo(stroke.to.x, stroke.to.y);
         this.canvasContext.stroke();
-
-        console.log('Canvas stroke drawn'); // Debug log
 
         // Reset alpha for future operations
         this.canvasContext.globalAlpha = 1.0;
+    }
 
-        this.lastDrawPoint = currentPoint;
+    redrawAllHighlights() {
+        // Clear canvas first
+        this.canvasContext.clearRect(0, 0, this.highlightCanvas.width, this.highlightCanvas.height);
+
+        // Redraw all stored strokes
+        this.highlightStrokes.forEach(stroke => {
+            this.drawStroke(stroke);
+        });
+
+        console.log('Redrawn', this.highlightStrokes.length, 'highlight strokes'); // Debug log
     }
 
     stopDrawing() {
@@ -289,6 +374,9 @@ class StoryHighlighter {
     }
 
     clearAllHighlights() {
+        // Clear stored strokes array
+        this.highlightStrokes = [];
+
         // Clear canvas highlights (unified for both desktop and mobile)
         if (this.canvasContext) {
             this.canvasContext.clearRect(0, 0, this.highlightCanvas.width, this.highlightCanvas.height);
@@ -303,6 +391,8 @@ class StoryHighlighter {
             }
             parent.removeChild(highlight);
         });
+
+        console.log('All highlights cleared'); // Debug log
     }
 }
 

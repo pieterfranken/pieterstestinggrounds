@@ -6,127 +6,308 @@ layout = "home"
 <?
 function onStart()
 {
-    $this['questions'] = [
+    // Complete question pool (50 questions)
+    $questionPool = [
+        // General Knowledge
         [
-            'id' => 1,
             'question' => 'What is the capital of France?',
-            'options' => [
-                'A' => 'London',
-                'B' => 'Berlin',
-                'C' => 'Paris',
-                'D' => 'Madrid'
-            ],
+            'options' => ['A' => 'London', 'B' => 'Berlin', 'C' => 'Paris', 'D' => 'Madrid'],
             'correct' => 'C'
         ],
         [
-            'id' => 2,
             'question' => 'Which planet is known as the Red Planet?',
-            'options' => [
-                'A' => 'Venus',
-                'B' => 'Mars',
-                'C' => 'Jupiter',
-                'D' => 'Saturn'
-            ],
+            'options' => ['A' => 'Venus', 'B' => 'Mars', 'C' => 'Jupiter', 'D' => 'Saturn'],
             'correct' => 'B'
         ],
         [
-            'id' => 3,
             'question' => 'What is the largest mammal in the world?',
-            'options' => [
-                'A' => 'Elephant',
-                'B' => 'Giraffe',
-                'C' => 'Blue Whale',
-                'D' => 'Polar Bear'
-            ],
+            'options' => ['A' => 'Elephant', 'B' => 'Giraffe', 'C' => 'Blue Whale', 'D' => 'Polar Bear'],
             'correct' => 'C'
         ],
         [
-            'id' => 4,
+            'question' => 'In which year did World War II end?',
+            'options' => ['A' => '1944', 'B' => '1945', 'C' => '1946', 'D' => '1947'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What is the smallest country in the world?',
+            'options' => ['A' => 'Monaco', 'B' => 'Nauru', 'C' => 'Vatican City', 'D' => 'San Marino'],
+            'correct' => 'C'
+        ],
+
+        // Science & Technology
+        [
+            'question' => 'What does CPU stand for?',
+            'options' => ['A' => 'Central Processing Unit', 'B' => 'Computer Personal Unit', 'C' => 'Central Program Unit', 'D' => 'Computer Processing Unit'],
+            'correct' => 'A'
+        ],
+        [
+            'question' => 'Which element has the chemical symbol "O"?',
+            'options' => ['A' => 'Gold', 'B' => 'Oxygen', 'C' => 'Silver', 'D' => 'Iron'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What is the speed of light in vacuum?',
+            'options' => ['A' => '300,000 km/s', 'B' => '150,000 km/s', 'C' => '299,792,458 m/s', 'D' => '186,000 miles/s'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Who developed the theory of relativity?',
+            'options' => ['A' => 'Isaac Newton', 'B' => 'Albert Einstein', 'C' => 'Galileo Galilei', 'D' => 'Stephen Hawking'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What does DNA stand for?',
+            'options' => ['A' => 'Deoxyribonucleic Acid', 'B' => 'Dynamic Nuclear Acid', 'C' => 'Dual Nuclear Acid', 'D' => 'Deoxyribose Nucleic Acid'],
+            'correct' => 'A'
+        ],
+
+        // Programming & Tech (PTG Theme)
+        [
             'question' => 'Which of these is not a programming language?',
-            'options' => [
-                'A' => 'Python',
-                'B' => 'Java',
-                'C' => 'Cobra',
-                'D' => 'Dolphin'
-            ],
+            'options' => ['A' => 'Python', 'B' => 'Java', 'C' => 'Cobra', 'D' => 'Dolphin'],
             'correct' => 'D'
         ],
         [
-            'id' => 5,
+            'question' => 'What does HTML stand for?',
+            'options' => ['A' => 'Hypertext Markup Language', 'B' => 'High Tech Modern Language', 'C' => 'Home Tool Markup Language', 'D' => 'Hyperlink and Text Markup Language'],
+            'correct' => 'A'
+        ],
+        [
+            'question' => 'Which company developed the PHP programming language?',
+            'options' => ['A' => 'Microsoft', 'B' => 'Google', 'C' => 'Rasmus Lerdorf', 'D' => 'Oracle'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'What does API stand for?',
+            'options' => ['A' => 'Application Programming Interface', 'B' => 'Advanced Programming Integration', 'C' => 'Automated Program Interface', 'D' => 'Application Process Integration'],
+            'correct' => 'A'
+        ],
+        [
+            'question' => 'Which database query language is most commonly used?',
+            'options' => ['A' => 'NoSQL', 'B' => 'SQL', 'C' => 'GraphQL', 'D' => 'MongoDB'],
+            'correct' => 'B'
+        ],
+
+        // Geography
+        [
+            'question' => 'Which is the longest river in the world?',
+            'options' => ['A' => 'Amazon River', 'B' => 'Nile River', 'C' => 'Mississippi River', 'D' => 'Yangtze River'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'Mount Everest is located in which mountain range?',
+            'options' => ['A' => 'Andes', 'B' => 'Rocky Mountains', 'C' => 'Himalayas', 'D' => 'Alps'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Which continent has the most countries?',
+            'options' => ['A' => 'Asia', 'B' => 'Africa', 'C' => 'Europe', 'D' => 'South America'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What is the capital of Australia?',
+            'options' => ['A' => 'Sydney', 'B' => 'Melbourne', 'C' => 'Canberra', 'D' => 'Perth'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Which ocean is the largest?',
+            'options' => ['A' => 'Atlantic Ocean', 'B' => 'Indian Ocean', 'C' => 'Arctic Ocean', 'D' => 'Pacific Ocean'],
+            'correct' => 'D'
+        ],
+
+        // History
+        [
+            'question' => 'Who was the first person to walk on the moon?',
+            'options' => ['A' => 'Buzz Aldrin', 'B' => 'Neil Armstrong', 'C' => 'John Glenn', 'D' => 'Alan Shepard'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'The Berlin Wall fell in which year?',
+            'options' => ['A' => '1987', 'B' => '1988', 'C' => '1989', 'D' => '1990'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Which ancient wonder of the world was located in Alexandria?',
+            'options' => ['A' => 'Hanging Gardens', 'B' => 'Lighthouse of Alexandria', 'C' => 'Colossus of Rhodes', 'D' => 'Temple of Artemis'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'The Renaissance period began in which country?',
+            'options' => ['A' => 'France', 'B' => 'Germany', 'C' => 'Italy', 'D' => 'England'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Who wrote "The Art of War"?',
+            'options' => ['A' => 'Confucius', 'B' => 'Sun Tzu', 'C' => 'Lao Tzu', 'D' => 'Mencius'],
+            'correct' => 'B'
+        ],
+
+        // Current Events & Modern Knowledge
+        [
+            'question' => 'Which social media platform was founded by Mark Zuckerberg?',
+            'options' => ['A' => 'Twitter', 'B' => 'Instagram', 'C' => 'Facebook', 'D' => 'LinkedIn'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'What does "AI" stand for in technology?',
+            'options' => ['A' => 'Automated Intelligence', 'B' => 'Artificial Intelligence', 'C' => 'Advanced Integration', 'D' => 'Algorithmic Interface'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'Which company developed the iPhone?',
+            'options' => ['A' => 'Samsung', 'B' => 'Google', 'C' => 'Apple', 'D' => 'Microsoft'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'What does "IoT" stand for?',
+            'options' => ['A' => 'Internet of Things', 'B' => 'Integration of Technology', 'C' => 'Interface of Tools', 'D' => 'Information on Technology'],
+            'correct' => 'A'
+        ],
+        [
+            'question' => 'Which cryptocurrency was the first to be created?',
+            'options' => ['A' => 'Ethereum', 'B' => 'Bitcoin', 'C' => 'Litecoin', 'D' => 'Ripple'],
+            'correct' => 'B'
+        ],
+
+        // More Programming & Tech
+        [
             'question' => 'What year was October CMS first released?',
-            'options' => [
-                'A' => '2010',
-                'B' => '2013',
-                'C' => '2015',
-                'D' => '2018'
-            ],
+            'options' => ['A' => '2010', 'B' => '2013', 'C' => '2015', 'D' => '2018'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'Which programming language is known for its use in data science?',
+            'options' => ['A' => 'JavaScript', 'B' => 'Python', 'C' => 'C++', 'D' => 'Ruby'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What does "CSS" stand for?',
+            'options' => ['A' => 'Computer Style Sheets', 'B' => 'Creative Style Sheets', 'C' => 'Cascading Style Sheets', 'D' => 'Colorful Style Sheets'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Which version control system is most popular among developers?',
+            'options' => ['A' => 'SVN', 'B' => 'Git', 'C' => 'Mercurial', 'D' => 'CVS'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What does "HTTP" stand for?',
+            'options' => ['A' => 'HyperText Transfer Protocol', 'B' => 'High Tech Transfer Protocol', 'C' => 'HyperText Transport Protocol', 'D' => 'Home Text Transfer Protocol'],
+            'correct' => 'A'
+        ],
+
+        // More Science
+        [
+            'question' => 'What is the chemical formula for water?',
+            'options' => ['A' => 'H2O', 'B' => 'CO2', 'C' => 'NaCl', 'D' => 'CH4'],
+            'correct' => 'A'
+        ],
+        [
+            'question' => 'How many bones are in the adult human body?',
+            'options' => ['A' => '196', 'B' => '206', 'C' => '216', 'D' => '226'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What is the hardest natural substance on Earth?',
+            'options' => ['A' => 'Gold', 'B' => 'Iron', 'C' => 'Diamond', 'D' => 'Platinum'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Which gas makes up approximately 78% of Earth\'s atmosphere?',
+            'options' => ['A' => 'Oxygen', 'B' => 'Carbon Dioxide', 'C' => 'Nitrogen', 'D' => 'Hydrogen'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'What is the study of earthquakes called?',
+            'options' => ['A' => 'Geology', 'B' => 'Seismology', 'C' => 'Meteorology', 'D' => 'Volcanology'],
+            'correct' => 'B'
+        ],
+
+        // More General Knowledge
+        [
+            'question' => 'Which instrument measures atmospheric pressure?',
+            'options' => ['A' => 'Thermometer', 'B' => 'Barometer', 'C' => 'Hygrometer', 'D' => 'Anemometer'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What is the currency of Japan?',
+            'options' => ['A' => 'Yuan', 'B' => 'Won', 'C' => 'Yen', 'D' => 'Rupee'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Which planet is closest to the Sun?',
+            'options' => ['A' => 'Venus', 'B' => 'Mercury', 'C' => 'Earth', 'D' => 'Mars'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'How many sides does a hexagon have?',
+            'options' => ['A' => '5', 'B' => '6', 'C' => '7', 'D' => '8'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What is the largest organ in the human body?',
+            'options' => ['A' => 'Brain', 'B' => 'Liver', 'C' => 'Lungs', 'D' => 'Skin'],
+            'correct' => 'D'
+        ],
+
+        // More Geography
+        [
+            'question' => 'Which country has the most time zones?',
+            'options' => ['A' => 'Russia', 'B' => 'United States', 'C' => 'China', 'D' => 'France'],
+            'correct' => 'D'
+        ],
+        [
+            'question' => 'The Sahara Desert is located in which continent?',
+            'options' => ['A' => 'Asia', 'B' => 'Australia', 'C' => 'Africa', 'D' => 'South America'],
+            'correct' => 'C'
+        ],
+        [
+            'question' => 'Which is the deepest ocean trench?',
+            'options' => ['A' => 'Puerto Rico Trench', 'B' => 'Mariana Trench', 'C' => 'Java Trench', 'D' => 'Peru-Chile Trench'],
+            'correct' => 'B'
+        ],
+        [
+            'question' => 'What is the capital of Canada?',
+            'options' => ['A' => 'Toronto', 'B' => 'Vancouver', 'C' => 'Montreal', 'D' => 'Ottawa'],
+            'correct' => 'D'
+        ],
+        [
+            'question' => 'Which mountain range separates Europe and Asia?',
+            'options' => ['A' => 'Himalayas', 'B' => 'Ural Mountains', 'C' => 'Caucasus Mountains', 'D' => 'Alps'],
             'correct' => 'B'
         ]
     ];
+
+    // Randomly select 10 questions from the pool
+    $selectedQuestions = array_rand($questionPool, 10);
+    $questions = [];
+
+    foreach ($selectedQuestions as $index => $questionIndex) {
+        $questions[] = [
+            'id' => $index + 1,
+            'question' => $questionPool[$questionIndex]['question'],
+            'options' => $questionPool[$questionIndex]['options'],
+            'correct' => $questionPool[$questionIndex]['correct']
+        ];
+    }
+
+    // Store selected questions in session for use in onSubmitQuiz
+    Session::put('current_quiz_questions', $questions);
+    $this['questions'] = $questions;
 }
 
 function onSubmitQuiz()
 {
     $answers = post('answers', []);
 
-    // Define questions directly in this function to ensure they're available
-    $questions = [
-        [
-            'id' => 1,
-            'question' => 'What is the capital of France?',
-            'options' => [
-                'A' => 'London',
-                'B' => 'Berlin',
-                'C' => 'Paris',
-                'D' => 'Madrid'
-            ],
-            'correct' => 'C'
-        ],
-        [
-            'id' => 2,
-            'question' => 'Which planet is known as the Red Planet?',
-            'options' => [
-                'A' => 'Venus',
-                'B' => 'Mars',
-                'C' => 'Jupiter',
-                'D' => 'Saturn'
-            ],
-            'correct' => 'B'
-        ],
-        [
-            'id' => 3,
-            'question' => 'What is the largest mammal in the world?',
-            'options' => [
-                'A' => 'Elephant',
-                'B' => 'Giraffe',
-                'C' => 'Blue Whale',
-                'D' => 'Polar Bear'
-            ],
-            'correct' => 'C'
-        ],
-        [
-            'id' => 4,
-            'question' => 'Which of these is not a programming language?',
-            'options' => [
-                'A' => 'Python',
-                'B' => 'Java',
-                'C' => 'Cobra',
-                'D' => 'Dolphin'
-            ],
-            'correct' => 'D'
-        ],
-        [
-            'id' => 5,
-            'question' => 'What year was October CMS first released?',
-            'options' => [
-                'A' => '2010',
-                'B' => '2013',
-                'C' => '2015',
-                'D' => '2018'
-            ],
-            'correct' => 'B'
-        ]
-    ];
+    // Get the questions from session that were selected for this quiz
+    $questions = Session::get('current_quiz_questions', []);
+
+    // If no questions in session, redirect back to quiz page
+    if (empty($questions)) {
+        return Redirect::to('/quiz');
+    }
 
     $score = 0;
     $results = [];
@@ -166,7 +347,8 @@ function onSubmitQuiz()
         <div class="col-md-8 offset-md-2">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h1 class="h3 mb-0">Multiple Choice Quiz</h1>
+                    <h1 class="h3 mb-0">PTG Knowledge Quiz</h1>
+                    
                 </div>
                 <div class="card-body">
                     <div id="quiz-container">
