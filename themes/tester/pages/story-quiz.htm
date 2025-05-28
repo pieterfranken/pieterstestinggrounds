@@ -2,6 +2,10 @@
 title = "Story Quiz"
 url = "/story-quiz"
 layout = "home"
+
+[session]
+security = "user"
+redirect = "auth/login"
 ==
 <?
 function onStart()

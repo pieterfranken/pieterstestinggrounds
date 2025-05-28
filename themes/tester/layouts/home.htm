@@ -1,5 +1,9 @@
 ##
 description = "Home page layout"
+
+[session]
+security = "all"
+redirect = "auth/login"
 ==
 <!DOCTYPE html>
 <html>
@@ -146,6 +150,129 @@ description = "Home page layout"
                 line-height: 1.6;
             }
 
+            /* Authentication Styles */
+            .dropdown-menu {
+                border: 1px solid var(--border-color);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                border-radius: 8px;
+            }
+
+            .dropdown-item {
+                color: var(--text-color);
+                font-weight: 300;
+                padding: 10px 20px;
+                transition: background-color 0.3s ease;
+            }
+
+            .dropdown-item:hover {
+                background-color: var(--light-gray);
+                color: var(--accent-color);
+            }
+
+            .dropdown-divider {
+                border-color: var(--border-color);
+            }
+
+            /* Auth Forms */
+            .auth-container {
+                max-width: 400px;
+                margin: 0 auto;
+                padding: 40px 20px;
+            }
+
+            .auth-card {
+                background: #fff;
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                padding: 40px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            }
+
+            .form-floating {
+                margin-bottom: 20px;
+            }
+
+            .form-floating > .form-control {
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                font-weight: 300;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .form-floating > .form-control:focus {
+                border-color: var(--accent-color);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.1);
+            }
+
+            .form-floating > label {
+                color: #6c757d;
+                font-weight: 300;
+            }
+
+            .btn-primary {
+                background-color: var(--accent-color);
+                border-color: var(--accent-color);
+                font-weight: 400;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+
+            .btn-primary:hover {
+                background-color: #2980b9;
+                border-color: #2980b9;
+                transform: translateY(-1px);
+            }
+
+            /* Mobile Authentication Controls */
+            .mobile-auth-fab {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+            }
+
+            .mobile-auth-fab .btn {
+                width: 56px;
+                height: 56px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+                border: none;
+                font-size: 1.2rem;
+            }
+
+            .mobile-auth-fab .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+            }
+
+            @media (max-width: 768px) {
+                .auth-container {
+                    padding: 20px 15px;
+                }
+
+                .auth-card {
+                    padding: 30px 20px;
+                }
+
+                .navbar-nav .dropdown-menu {
+                    position: static !important;
+                    transform: none !important;
+                    border: none;
+                    box-shadow: none;
+                    background: transparent;
+                    margin-top: 10px;
+                }
+
+                .navbar-nav .dropdown-item {
+                    padding: 8px 15px;
+                    border-radius: 6px;
+                    margin: 2px 0;
+                    background: var(--light-gray);
+                }
+            }
+
             /* Responsive adjustments */
             @media (max-width: 768px) {
                 .hero-section {
@@ -183,6 +310,27 @@ description = "Home page layout"
                         <li class="nav-item">
                             <a class="nav-link {% if this.page.id == 'story-quizzes' or this.page.id == 'story-quiz' or this.page.id == 'story-quiz-2' %}active{% endif %}" href="{{ 'story-quizzes'|page }}">Story Quizzes</a>
                         </li>
+
+                        <!-- Authentication Links -->
+                        {% if user %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ user.first_name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="{{ 'auth/account'|page }}">Account</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#" data-request="session::onLogout">Logout</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if this.page.id == 'auth-login' %}active{% endif %}" href="{{ 'auth/login'|page }}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if this.page.id == 'auth-register' %}active{% endif %}" href="{{ 'auth/register'|page }}">Register</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -201,6 +349,15 @@ description = "Home page layout"
         <section id="layout-content">
             {% page %}
         </section>
+
+        <!-- Mobile Authentication Floating Button -->
+        {% if not user %}
+            <div class="mobile-auth-fab d-md-none">
+                <a href="{{ 'auth/login'|page }}" class="btn btn-primary rounded-circle">
+                    <i class="bi bi-person"></i>
+                </a>
+            </div>
+        {% endif %}
 
         <!-- Footer -->
         <footer class="footer">

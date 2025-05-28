@@ -2,6 +2,10 @@
 title = "Story Quizzes"
 url = "/story-quizzes"
 layout = "home"
+
+[session]
+security = "user"
+redirect = "auth/login"
 ==
 <?
 function onStart()
@@ -31,6 +35,9 @@ function onStart()
         <div class="col-md-12">
             <h1>Interactive Story Quizzes</h1>
             <p class="lead">Enhance your reading comprehension and test your knowledge with our collection of tech-themed story quizzes. Each quiz features text highlighting functionality to help you study important details.</p>
+            {% if user %}
+                <p class="text-muted">Welcome back, {{ user.first_name }}! Choose a story to begin your reading adventure.</p>
+            {% endif %}
         </div>
     </div>
 

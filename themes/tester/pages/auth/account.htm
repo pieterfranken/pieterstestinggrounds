@@ -1,0 +1,187 @@
+##
+title = "Account"
+url = "/auth/account"
+layout = "home"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "auth/login"
+
+[account]
+isDefault = 1
+==
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="auth-card">
+                <div class="text-center mb-4">
+                    <h1 class="h2 mb-2" style="color: var(--primary-color); font-weight: 300;">Account Settings</h1>
+                    <p class="text-muted" style="font-weight: 300;">Manage your profile and security settings</p>
+                </div>
+
+                {% if user %}
+                    <!-- Profile Information -->
+                    <div class="mb-5">
+                        <h3 class="h5 mb-3" style="color: var(--primary-color); font-weight: 400;">Profile Information</h3>
+
+                        <form method="post" data-request="account::onUpdateProfile" data-request-flash>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            name="first_name"
+                                            type="text"
+                                            class="form-control"
+                                            id="inputFirstName"
+                                            value="{{ user.first_name }}"
+                                            placeholder="First name"
+                                        />
+                                        <label for="inputFirstName">First name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            name="last_name"
+                                            type="text"
+                                            class="form-control"
+                                            id="inputLastName"
+                                            value="{{ user.last_name }}"
+                                            placeholder="Last name"
+                                        />
+                                        <label for="inputLastName">Last name</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input
+                                    name="email"
+                                    type="email"
+                                    class="form-control"
+                                    id="inputEmail"
+                                    value="{{ user.email }}"
+                                    placeholder="Email address"
+                                />
+                                <label for="inputEmail">Email address</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" data-attach-loading>
+                                Update Profile
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Account Actions -->
+                    <div class="mb-4">
+                        <h3 class="h5 mb-3" style="color: var(--primary-color); font-weight: 400;">Account Actions</h3>
+
+                        <div class="d-grid gap-2 d-md-block">
+                            {% if not user.activated_at %}
+                                <button
+                                    class="btn btn-outline-primary me-md-2"
+                                    data-request="account::onVerifyEmail"
+                                    data-request-flash>
+                                    Resend Verification Email
+                                </button>
+                            {% endif %}
+
+                            <a href="#"
+                               class="btn btn-outline-secondary"
+                               data-request="session::onLogout"
+                               data-request-confirm="Are you sure you want to logout?">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="mb-4">
+                        <h3 class="h5 mb-3" style="color: var(--primary-color); font-weight: 400;">Quick Access</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <a href="{{ 'quiz'|page }}" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-question-circle me-2"></i>Take Quiz
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ 'story-quizzes'|page }}" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-book me-2"></i>Story Quizzes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Info Display -->
+                    <div class="mt-4 pt-4" style="border-top: 1px solid var(--border-color);">
+                        <div class="row text-muted small">
+                            <div class="col-md-6">
+                                <strong>Member since:</strong> {{ user.created_at|date('F j, Y') }}
+                            </div>
+                            {% if user.activated_at %}
+                                <div class="col-md-6">
+                                    <strong>Email verified:</strong> {{ user.activated_at|date('F j, Y') }}
+                                </div>
+                            {% else %}
+                                <div class="col-md-6">
+                                    <strong>Email status:</strong> <span class="text-warning">Pending verification</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Account page specific styles */
+.auth-card {
+    max-width: none;
+}
+
+.btn-outline-primary {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    font-weight: 400;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--text-color);
+    font-weight: 400;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--light-gray);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.small {
+    font-size: 0.875rem;
+    font-weight: 300;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 15px;
+    }
+
+    .auth-card {
+        padding: 30px 20px;
+    }
+
+    .d-grid .btn {
+        margin-bottom: 10px;
+    }
+}
+</style>
