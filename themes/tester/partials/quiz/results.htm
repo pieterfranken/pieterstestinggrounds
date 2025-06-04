@@ -40,7 +40,7 @@
     {% for id, result in results %}
         <div class="card mb-3 {% if result.isCorrect %}border-success{% else %}border-danger{% endif %}">
             <div class="card-header {% if result.isCorrect %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
-                <h5 class="mb-0">Question {{ id }}: {{ result.isCorrect ? 'Correct' : 'Incorrect' }}</h5>
+                <h5 class="mb-0">Question {{ result.number }}: {{ result.isCorrect ? 'Correct' : 'Incorrect' }}</h5>
             </div>
             <div class="card-body">
                 <p class="card-text"><strong>{{ result.question }}</strong></p>

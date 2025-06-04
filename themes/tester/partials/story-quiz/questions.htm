@@ -8,7 +8,7 @@
 
     {% for question in questions %}
         <div class="mb-4">
-            <h5 class="mb-3">{{ question.id }}. {{ question.question }}</h5>
+            <h5 class="mb-3">{{ question.number }}. {{ question.question }}</h5>
 
             <div class="list-group">
                 {% for key, option in question.options %}

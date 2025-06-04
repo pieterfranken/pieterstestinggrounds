@@ -107,10 +107,11 @@ class StoryHighlighter {
         this.highlightCanvas.style.zIndex = '1'; // Behind text content
         this.highlightCanvas.style.opacity = '1';
         this.highlightCanvas.style.background = 'transparent';
+        this.highlightCanvas.className = 'highlight-canvas'; // Add class for CSS targeting
 
         // Make story content container relative for canvas positioning
         this.storyContent.style.position = 'relative';
-        this.storyContent.style.zIndex = '2'; // Text content above canvas
+        this.storyContent.style.zIndex = '1'; // Base container z-index
 
         // Insert canvas as first child so it appears behind text
         this.storyContent.insertBefore(this.highlightCanvas, this.storyContent.firstChild);

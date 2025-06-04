@@ -8,296 +8,43 @@ security = "user"
 redirect = "auth/login"
 ==
 <?
+use PTG\Quiz\Models\Quiz;
+use PTG\Quiz\Models\QuizAttempt;
+
 function onStart()
 {
-    // Complete question pool (50 questions)
-    $questionPool = [
-        // General Knowledge
-        [
-            'question' => 'What is the capital of France?',
-            'options' => ['A' => 'London', 'B' => 'Berlin', 'C' => 'Paris', 'D' => 'Madrid'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Which planet is known as the Red Planet?',
-            'options' => ['A' => 'Venus', 'B' => 'Mars', 'C' => 'Jupiter', 'D' => 'Saturn'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What is the largest mammal in the world?',
-            'options' => ['A' => 'Elephant', 'B' => 'Giraffe', 'C' => 'Blue Whale', 'D' => 'Polar Bear'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'In which year did World War II end?',
-            'options' => ['A' => '1944', 'B' => '1945', 'C' => '1946', 'D' => '1947'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What is the smallest country in the world?',
-            'options' => ['A' => 'Monaco', 'B' => 'Nauru', 'C' => 'Vatican City', 'D' => 'San Marino'],
-            'correct' => 'C'
-        ],
+    // Get the general knowledge quiz from database
+    $quiz = Quiz::where('type', 'general')
+        ->where('is_active', true)
+        ->first();
 
-        // Science & Technology
-        [
-            'question' => 'What does CPU stand for?',
-            'options' => ['A' => 'Central Processing Unit', 'B' => 'Computer Personal Unit', 'C' => 'Central Program Unit', 'D' => 'Computer Processing Unit'],
-            'correct' => 'A'
-        ],
-        [
-            'question' => 'Which element has the chemical symbol "O"?',
-            'options' => ['A' => 'Gold', 'B' => 'Oxygen', 'C' => 'Silver', 'D' => 'Iron'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What is the speed of light in vacuum?',
-            'options' => ['A' => '300,000 km/s', 'B' => '150,000 km/s', 'C' => '299,792,458 m/s', 'D' => '186,000 miles/s'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Who developed the theory of relativity?',
-            'options' => ['A' => 'Isaac Newton', 'B' => 'Albert Einstein', 'C' => 'Galileo Galilei', 'D' => 'Stephen Hawking'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What does DNA stand for?',
-            'options' => ['A' => 'Deoxyribonucleic Acid', 'B' => 'Dynamic Nuclear Acid', 'C' => 'Dual Nuclear Acid', 'D' => 'Deoxyribose Nucleic Acid'],
-            'correct' => 'A'
-        ],
-
-        // Programming & Tech (PTG Theme)
-        [
-            'question' => 'Which of these is not a programming language?',
-            'options' => ['A' => 'Python', 'B' => 'Java', 'C' => 'Cobra', 'D' => 'Dolphin'],
-            'correct' => 'D'
-        ],
-        [
-            'question' => 'What does HTML stand for?',
-            'options' => ['A' => 'Hypertext Markup Language', 'B' => 'High Tech Modern Language', 'C' => 'Home Tool Markup Language', 'D' => 'Hyperlink and Text Markup Language'],
-            'correct' => 'A'
-        ],
-        [
-            'question' => 'Which company developed the PHP programming language?',
-            'options' => ['A' => 'Microsoft', 'B' => 'Google', 'C' => 'Rasmus Lerdorf', 'D' => 'Oracle'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'What does API stand for?',
-            'options' => ['A' => 'Application Programming Interface', 'B' => 'Advanced Programming Integration', 'C' => 'Automated Program Interface', 'D' => 'Application Process Integration'],
-            'correct' => 'A'
-        ],
-        [
-            'question' => 'Which database query language is most commonly used?',
-            'options' => ['A' => 'NoSQL', 'B' => 'SQL', 'C' => 'GraphQL', 'D' => 'MongoDB'],
-            'correct' => 'B'
-        ],
-
-        // Geography
-        [
-            'question' => 'Which is the longest river in the world?',
-            'options' => ['A' => 'Amazon River', 'B' => 'Nile River', 'C' => 'Mississippi River', 'D' => 'Yangtze River'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'Mount Everest is located in which mountain range?',
-            'options' => ['A' => 'Andes', 'B' => 'Rocky Mountains', 'C' => 'Himalayas', 'D' => 'Alps'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Which continent has the most countries?',
-            'options' => ['A' => 'Asia', 'B' => 'Africa', 'C' => 'Europe', 'D' => 'South America'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What is the capital of Australia?',
-            'options' => ['A' => 'Sydney', 'B' => 'Melbourne', 'C' => 'Canberra', 'D' => 'Perth'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Which ocean is the largest?',
-            'options' => ['A' => 'Atlantic Ocean', 'B' => 'Indian Ocean', 'C' => 'Arctic Ocean', 'D' => 'Pacific Ocean'],
-            'correct' => 'D'
-        ],
-
-        // History
-        [
-            'question' => 'Who was the first person to walk on the moon?',
-            'options' => ['A' => 'Buzz Aldrin', 'B' => 'Neil Armstrong', 'C' => 'John Glenn', 'D' => 'Alan Shepard'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'The Berlin Wall fell in which year?',
-            'options' => ['A' => '1987', 'B' => '1988', 'C' => '1989', 'D' => '1990'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Which ancient wonder of the world was located in Alexandria?',
-            'options' => ['A' => 'Hanging Gardens', 'B' => 'Lighthouse of Alexandria', 'C' => 'Colossus of Rhodes', 'D' => 'Temple of Artemis'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'The Renaissance period began in which country?',
-            'options' => ['A' => 'France', 'B' => 'Germany', 'C' => 'Italy', 'D' => 'England'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Who wrote "The Art of War"?',
-            'options' => ['A' => 'Confucius', 'B' => 'Sun Tzu', 'C' => 'Lao Tzu', 'D' => 'Mencius'],
-            'correct' => 'B'
-        ],
-
-        // Current Events & Modern Knowledge
-        [
-            'question' => 'Which social media platform was founded by Mark Zuckerberg?',
-            'options' => ['A' => 'Twitter', 'B' => 'Instagram', 'C' => 'Facebook', 'D' => 'LinkedIn'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'What does "AI" stand for in technology?',
-            'options' => ['A' => 'Automated Intelligence', 'B' => 'Artificial Intelligence', 'C' => 'Advanced Integration', 'D' => 'Algorithmic Interface'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'Which company developed the iPhone?',
-            'options' => ['A' => 'Samsung', 'B' => 'Google', 'C' => 'Apple', 'D' => 'Microsoft'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'What does "IoT" stand for?',
-            'options' => ['A' => 'Internet of Things', 'B' => 'Integration of Technology', 'C' => 'Interface of Tools', 'D' => 'Information on Technology'],
-            'correct' => 'A'
-        ],
-        [
-            'question' => 'Which cryptocurrency was the first to be created?',
-            'options' => ['A' => 'Ethereum', 'B' => 'Bitcoin', 'C' => 'Litecoin', 'D' => 'Ripple'],
-            'correct' => 'B'
-        ],
-
-        // More Programming & Tech
-        [
-            'question' => 'What year was October CMS first released?',
-            'options' => ['A' => '2010', 'B' => '2013', 'C' => '2015', 'D' => '2018'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'Which programming language is known for its use in data science?',
-            'options' => ['A' => 'JavaScript', 'B' => 'Python', 'C' => 'C++', 'D' => 'Ruby'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What does "CSS" stand for?',
-            'options' => ['A' => 'Computer Style Sheets', 'B' => 'Creative Style Sheets', 'C' => 'Cascading Style Sheets', 'D' => 'Colorful Style Sheets'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Which version control system is most popular among developers?',
-            'options' => ['A' => 'SVN', 'B' => 'Git', 'C' => 'Mercurial', 'D' => 'CVS'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What does "HTTP" stand for?',
-            'options' => ['A' => 'HyperText Transfer Protocol', 'B' => 'High Tech Transfer Protocol', 'C' => 'HyperText Transport Protocol', 'D' => 'Home Text Transfer Protocol'],
-            'correct' => 'A'
-        ],
-
-        // More Science
-        [
-            'question' => 'What is the chemical formula for water?',
-            'options' => ['A' => 'H2O', 'B' => 'CO2', 'C' => 'NaCl', 'D' => 'CH4'],
-            'correct' => 'A'
-        ],
-        [
-            'question' => 'How many bones are in the adult human body?',
-            'options' => ['A' => '196', 'B' => '206', 'C' => '216', 'D' => '226'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What is the hardest natural substance on Earth?',
-            'options' => ['A' => 'Gold', 'B' => 'Iron', 'C' => 'Diamond', 'D' => 'Platinum'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Which gas makes up approximately 78% of Earth\'s atmosphere?',
-            'options' => ['A' => 'Oxygen', 'B' => 'Carbon Dioxide', 'C' => 'Nitrogen', 'D' => 'Hydrogen'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'What is the study of earthquakes called?',
-            'options' => ['A' => 'Geology', 'B' => 'Seismology', 'C' => 'Meteorology', 'D' => 'Volcanology'],
-            'correct' => 'B'
-        ],
-
-        // More General Knowledge
-        [
-            'question' => 'Which instrument measures atmospheric pressure?',
-            'options' => ['A' => 'Thermometer', 'B' => 'Barometer', 'C' => 'Hygrometer', 'D' => 'Anemometer'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What is the currency of Japan?',
-            'options' => ['A' => 'Yuan', 'B' => 'Won', 'C' => 'Yen', 'D' => 'Rupee'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Which planet is closest to the Sun?',
-            'options' => ['A' => 'Venus', 'B' => 'Mercury', 'C' => 'Earth', 'D' => 'Mars'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'How many sides does a hexagon have?',
-            'options' => ['A' => '5', 'B' => '6', 'C' => '7', 'D' => '8'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What is the largest organ in the human body?',
-            'options' => ['A' => 'Brain', 'B' => 'Liver', 'C' => 'Lungs', 'D' => 'Skin'],
-            'correct' => 'D'
-        ],
-
-        // More Geography
-        [
-            'question' => 'Which country has the most time zones?',
-            'options' => ['A' => 'Russia', 'B' => 'United States', 'C' => 'China', 'D' => 'France'],
-            'correct' => 'D'
-        ],
-        [
-            'question' => 'The Sahara Desert is located in which continent?',
-            'options' => ['A' => 'Asia', 'B' => 'Australia', 'C' => 'Africa', 'D' => 'South America'],
-            'correct' => 'C'
-        ],
-        [
-            'question' => 'Which is the deepest ocean trench?',
-            'options' => ['A' => 'Puerto Rico Trench', 'B' => 'Mariana Trench', 'C' => 'Java Trench', 'D' => 'Peru-Chile Trench'],
-            'correct' => 'B'
-        ],
-        [
-            'question' => 'What is the capital of Canada?',
-            'options' => ['A' => 'Toronto', 'B' => 'Vancouver', 'C' => 'Montreal', 'D' => 'Ottawa'],
-            'correct' => 'D'
-        ],
-        [
-            'question' => 'Which mountain range separates Europe and Asia?',
-            'options' => ['A' => 'Himalayas', 'B' => 'Ural Mountains', 'C' => 'Caucasus Mountains', 'D' => 'Alps'],
-            'correct' => 'B'
-        ]
-    ];
-
-    // Randomly select 10 questions from the pool
-    $selectedQuestions = array_rand($questionPool, 10);
-    $questions = [];
-
-    foreach ($selectedQuestions as $index => $questionIndex) {
-        $questions[] = [
-            'id' => $index + 1,
-            'question' => $questionPool[$questionIndex]['question'],
-            'options' => $questionPool[$questionIndex]['options'],
-            'correct' => $questionPool[$questionIndex]['correct']
-        ];
+    if (!$quiz) {
+        throw new ApplicationException('No active general quiz found');
     }
 
-    // Store selected questions in session for use in onSubmitQuiz
+    // Get 10 random questions from the quiz
+    $dbQuestions = $quiz->getRandomQuestions(10);
+
+    // Convert to format expected by frontend (for backward compatibility)
+    $questions = [];
+    $questionNumber = 1;
+    foreach ($dbQuestions as $index => $dbQuestion) {
+        $questions[] = [
+            'id' => $dbQuestion->id,
+            'number' => $questionNumber,
+            'question' => $dbQuestion->question_text,
+            'options' => $dbQuestion->options_array,
+            'correct' => $dbQuestion->correct_option
+        ];
+        $questionNumber++;
+    }
+
+    // Store quiz info and selected questions in session
+    Session::put('current_quiz_id', $quiz->id);
     Session::put('current_quiz_questions', $questions);
+    Session::put('quiz_started_at', now());
+
+    $this['quiz'] = $quiz;
     $this['questions'] = $questions;
 }
 
@@ -305,11 +52,13 @@ function onSubmitQuiz()
 {
     $answers = post('answers', []);
 
-    // Get the questions from session that were selected for this quiz
+    // Get quiz data from session
+    $quizId = Session::get('current_quiz_id');
     $questions = Session::get('current_quiz_questions', []);
+    $startedAt = Session::get('quiz_started_at');
 
     // If no questions in session, redirect back to quiz page
-    if (empty($questions)) {
+    if (empty($questions) || !$quizId) {
         return Redirect::to('/quiz');
     }
 
@@ -326,6 +75,7 @@ function onSubmitQuiz()
         }
 
         $results[$questionId] = [
+            'number' => $question['number'],
             'question' => $question['question'],
             'userAnswer' => $userAnswer,
             'correctAnswer' => $question['correct'],
@@ -334,10 +84,31 @@ function onSubmitQuiz()
         ];
     }
 
+    // Calculate time taken
+    $timeTaken = $startedAt ? now()->diffInSeconds($startedAt) : null;
+
+    // Save quiz attempt to database
+    if (Auth::check()) {
+        $attempt = QuizAttempt::create([
+            'user_id' => Auth::id(),
+            'quiz_id' => $quizId,
+            'score' => $score,
+            'total_questions' => count($questions),
+            'answers' => $answers,
+            'started_at' => $startedAt,
+            'completed_at' => now(),
+            'time_taken' => $timeTaken,
+        ]);
+    }
+
+    // Clear session data
+    Session::forget(['current_quiz_id', 'current_quiz_questions', 'quiz_started_at']);
+
     $this['score'] = $score;
     $this['totalQuestions'] = count($questions);
     $this['percentage'] = ($score / count($questions)) * 100;
     $this['results'] = $results;
+    $this['timeTaken'] = $timeTaken;
 
     return [
         '#quiz-results' => $this->renderPartial('quiz/results')

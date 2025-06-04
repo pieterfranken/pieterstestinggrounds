@@ -8,24 +8,32 @@ security = "user"
 redirect = "auth/login"
 ==
 <?
+use PTG\Quiz\Models\Quiz;
+
 function onStart()
 {
-    $this['quizzes'] = [
-        [
-            'id' => 1,
-            'title' => 'The Mysterious Bug in the Digital Realm',
-            'description' => 'Follow the debugging team as they track down a malicious bug causing chaos in Byteville.',
-            'difficulty' => 'Beginner',
-            'url' => 'story-quiz'
-        ],
-        [
-            'id' => 2,
-            'title' => 'The Cloud Kingdom\'s Lost Data',
-            'description' => 'Join the investigation to recover missing data in the Cloud Kingdom and uncover the royal conspiracy.',
-            'difficulty' => 'Intermediate',
-            'url' => 'story-quiz-2'
-        ]
-    ];
+    // Get all active story quizzes from database
+    $storyQuizzes = Quiz::where('type', 'story')
+        ->where('is_active', true)
+        ->orderBy('difficulty')
+        ->orderBy('title')
+        ->get();
+
+    // Convert to format expected by frontend (for backward compatibility)
+    $quizzes = [];
+    foreach ($storyQuizzes as $quiz) {
+        $quizzes[] = [
+            'id' => $quiz->id,
+            'title' => $quiz->title,
+            'description' => $quiz->description,
+            'difficulty' => $quiz->difficulty,
+            'url' => 'story-quiz/' . $quiz->id, // Use dynamic URLs with quiz ID
+            'questions_count' => $quiz->questions_count,
+            'time_limit' => $quiz->time_limit
+        ];
+    }
+
+    $this['quizzes'] = $quizzes;
 }
 ?>
 ==
@@ -53,7 +61,7 @@ function onStart()
                         <p class="card-text">{{ quiz.description }}</p>
                     </div>
                     <div class="card-footer bg-white border-top-0">
-                        <a href="{{ quiz.url|page }}" class="btn btn-primary d-block">Start Quiz</a>
+                        <a href="/{{ quiz.url }}" class="btn btn-primary d-block">Start Quiz</a>
                     </div>
                 </div>
             </div>

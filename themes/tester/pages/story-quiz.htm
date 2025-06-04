@@ -1,6 +1,6 @@
 ##
 title = "Story Quiz"
-url = "/story-quiz"
+url = "/story-quiz/:id?"
 layout = "home"
 
 [session]
@@ -8,176 +8,76 @@ security = "user"
 redirect = "auth/login"
 ==
 <?
+use PTG\Quiz\Models\Quiz;
+use PTG\Quiz\Models\QuizAttempt;
+
 function onStart()
 {
+    // Get quiz ID from URL parameter or default to first story quiz
+    $quizId = $this->param('id', null);
+
+    if ($quizId) {
+        // Load specific quiz by ID
+        $quiz = Quiz::where('type', 'story')
+            ->where('id', $quizId)
+            ->where('is_active', true)
+            ->with('questions.options')
+            ->first();
+    } else {
+        // Default to the first story quiz (The Mysterious Bug in the Digital Realm)
+        $quiz = Quiz::where('type', 'story')
+            ->where('title', 'The Mysterious Bug in the Digital Realm')
+            ->where('is_active', true)
+            ->with('questions.options')
+            ->first();
+    }
+
+    if (!$quiz) {
+        throw new ApplicationException('Story quiz not found');
+    }
+
+    // Set up story data
     $this['story'] = [
-        'title' => 'The Mysterious Bug in the Digital Realm',
-        'content' => "<p>In the heart of the Digital Realm, a place where code came to life, there existed a thriving metropolis known as Byteville. The city was a marvel of engineering, with towering data structures, elegant algorithm boulevards, and bustling function districts. Citizens of Byteville—programs of all types—lived in harmony under the watchful eye of the System Administrator.</p>
-
-<p>One peculiar morning, as the system clock struck 08:00, something unusual happened. The normally efficient traffic lights at Logic Junction began to malfunction. Instead of following their regular red-green-yellow pattern, they flickered randomly, causing chaos among the commuting programs.</p>
-
-<p>\"This is most irregular,\" muttered SQL Query, a database manager who was now stuck in an unexpected traffic loop. Beside him, a young JavaScript function named EventHandler looked concerned.</p>
-
-<p>\"I've never seen anything like this,\" EventHandler said, watching as a group of Boolean variables collided, their values flipping from true to false upon impact. \"The System Administrator needs to know about this immediately!\"</p>
-
-<p>The news of the malfunction spread quickly through Byteville. By midday, reports came in of similar issues across the city: cache memory leaking in the Storage District, random crashes in the Gaming Quarter, and worst of all, the Authentication Gateway was letting programs pass without proper credentials.</p>
-
-<p>The System Administrator called an emergency meeting with the city's elite debugging team: Captain Exception, Binary Sleuth, and the renowned Dr. Overflow, a specialist in fixing the most complex bugs.</p>
-
-<p>\"We're dealing with something I've never encountered before,\" the System Administrator explained, displaying logs of the incidents on the main screen. \"The errors don't follow any pattern I can recognize.\"</p>
-
-<p>Dr. Overflow adjusted her spectacles and studied the logs carefully. \"Look here,\" she pointed to a sequence of timestamps. \"The malfunctions all occur exactly 12.57 seconds apart. This isn't random—it's deliberate.\"</p>
-
-<p>\"A virus?\" asked Captain Exception, always ready to catch and handle problems.</p>
-
-<p>\"Not quite,\" replied Binary Sleuth, who had been silently analyzing the data. \"The affected systems don't show signs of external corruption. This looks more like...\" he paused dramatically, \"a logic bomb.\"</p>
-
-<p>The room fell silent. Logic bombs were rare but devastating—pieces of code designed to trigger under specific conditions, causing widespread system failure.</p>
-
-<p>\"We need to find the trigger condition and the source,\" Dr. Overflow declared. \"Binary, you track the origin. Captain, contain the affected areas. I'll work on identifying the trigger pattern.\"</p>
-
-<p>As the team dispersed, EventHandler, who had been invited to observe the meeting due to his firsthand account, approached Dr. Overflow. \"I want to help,\" he said earnestly. \"I noticed something odd just before the traffic lights malfunctioned—a packet of data that didn't belong, moving against the normal flow of traffic.\"</p>
-
-<p>Dr. Overflow's eyes widened. \"That could be our clue! Show me exactly where you saw this.\"</p>
-
-<p>EventHandler led Dr. Overflow back to Logic Junction, where they set up monitoring equipment. After hours of waiting, they spotted it—a small, inconspicuous data packet with an unusual signature.</p>
-
-<p>\"There!\" EventHandler pointed excitedly. \"That's not supposed to be here!\"</p>
-
-<p>Dr. Overflow quickly captured the packet and examined its contents. Inside was a cleverly disguised recursive function that triggered itself every 12.57 seconds, gradually corrupting system resources.</p>
-
-<p>\"The signature,\" she whispered, recognizing the coding style. \"This was created by Infinite Loop, a notorious bug creator who escaped the Recycle Bin last month.\"</p>
-
-<p>Armed with this knowledge, the debugging team created a specialized patch that identified and neutralized the recursive function. Within hours, Byteville returned to normal, traffic flowed smoothly, and the Authentication Gateway was secure once more.</p>
-
-<p>The System Administrator commended the team, especially acknowledging EventHandler's crucial observation. \"Sometimes the smallest details lead to the biggest discoveries,\" she said, awarding him an honorary position on the debugging team.</p>
-
-<p>As for Infinite Loop, Binary Sleuth tracked him to an abandoned server on the edge of the Digital Realm. The authorities were closing in, ensuring that Byteville would remain safe from his mischievous code for the foreseeable future.</p>
-
-<p>In the days that followed, EventHandler often reflected on the adventure. He had learned an important lesson: in the world of programming, attention to detail wasn't just good practice—it could save an entire digital city from disaster.</p>"
+        'title' => $quiz->title,
+        'content' => $quiz->story_content
     ];
 
-    $this['questions'] = [
-        [
-            'id' => 1,
-            'question' => 'What was the name of the city in the Digital Realm?',
-            'options' => [
-                'A' => 'Codeville',
-                'B' => 'Byteville',
-                'C' => 'Programton',
-                'D' => 'Algorithmia'
-            ],
-            'correct' => 'B'
-        ],
-        [
-            'id' => 2,
-            'question' => 'What was the time interval between malfunctions?',
-            'options' => [
-                'A' => '10.57 seconds',
-                'B' => '12.57 seconds',
-                'C' => '15.57 seconds',
-                'D' => '20.57 seconds'
-            ],
-            'correct' => 'B'
-        ],
-        [
-            'id' => 3,
-            'question' => 'Who was responsible for creating the bug?',
-            'options' => [
-                'A' => 'Captain Exception',
-                'B' => 'Binary Sleuth',
-                'C' => 'Infinite Loop',
-                'D' => 'Dr. Overflow'
-            ],
-            'correct' => 'C'
-        ],
-        [
-            'id' => 4,
-            'question' => 'What type of malicious code was affecting Byteville?',
-            'options' => [
-                'A' => 'Virus',
-                'B' => 'Worm',
-                'C' => 'Trojan Horse',
-                'D' => 'Logic Bomb'
-            ],
-            'correct' => 'D'
-        ],
-        [
-            'id' => 5,
-            'question' => 'Who first noticed the unusual data packet?',
-            'options' => [
-                'A' => 'SQL Query',
-                'B' => 'EventHandler',
-                'C' => 'System Administrator',
-                'D' => 'Dr. Overflow'
-            ],
-            'correct' => 'B'
-        ]
-    ];
+    // Convert questions to format expected by frontend
+    $questions = [];
+    $questionNumber = 1;
+    foreach ($quiz->questions as $dbQuestion) {
+        $questions[] = [
+            'id' => $dbQuestion->id,
+            'number' => $questionNumber,
+            'question' => $dbQuestion->question_text,
+            'options' => $dbQuestion->options_array,
+            'correct' => $dbQuestion->correct_option
+        ];
+        $questionNumber++;
+    }
+
+    // Store quiz info and questions in session
+    Session::put('current_quiz_id', $quiz->id);
+    Session::put('current_quiz_questions', $questions);
+    Session::put('quiz_started_at', now());
+
+    $this['quiz'] = $quiz;
+    $this['questions'] = $questions;
 }
 
 function onSubmitQuiz()
 {
     $answers = post('answers', []);
 
-    // Define questions directly in this function to ensure they're available
-    $questions = [
-        [
-            'id' => 1,
-            'question' => 'What was the name of the city in the Digital Realm?',
-            'options' => [
-                'A' => 'Codeville',
-                'B' => 'Byteville',
-                'C' => 'Programton',
-                'D' => 'Algorithmia'
-            ],
-            'correct' => 'B'
-        ],
-        [
-            'id' => 2,
-            'question' => 'What was the time interval between malfunctions?',
-            'options' => [
-                'A' => '10.57 seconds',
-                'B' => '12.57 seconds',
-                'C' => '15.57 seconds',
-                'D' => '20.57 seconds'
-            ],
-            'correct' => 'B'
-        ],
-        [
-            'id' => 3,
-            'question' => 'Who was responsible for creating the bug?',
-            'options' => [
-                'A' => 'Captain Exception',
-                'B' => 'Binary Sleuth',
-                'C' => 'Infinite Loop',
-                'D' => 'Dr. Overflow'
-            ],
-            'correct' => 'C'
-        ],
-        [
-            'id' => 4,
-            'question' => 'What type of malicious code was affecting Byteville?',
-            'options' => [
-                'A' => 'Virus',
-                'B' => 'Worm',
-                'C' => 'Trojan Horse',
-                'D' => 'Logic Bomb'
-            ],
-            'correct' => 'D'
-        ],
-        [
-            'id' => 5,
-            'question' => 'Who first noticed the unusual data packet?',
-            'options' => [
-                'A' => 'SQL Query',
-                'B' => 'EventHandler',
-                'C' => 'System Administrator',
-                'D' => 'Dr. Overflow'
-            ],
-            'correct' => 'B'
-        ]
-    ];
+    // Get quiz data from session
+    $quizId = Session::get('current_quiz_id');
+    $questions = Session::get('current_quiz_questions', []);
+    $startedAt = Session::get('quiz_started_at');
+
+    // If no questions in session, redirect back to quiz page
+    if (empty($questions) || !$quizId) {
+        return Redirect::to('/story-quiz');
+    }
 
     $score = 0;
     $results = [];
@@ -192,6 +92,7 @@ function onSubmitQuiz()
         }
 
         $results[$questionId] = [
+            'number' => $question['number'],
             'question' => $question['question'],
             'userAnswer' => $userAnswer,
             'correctAnswer' => $question['correct'],
@@ -200,10 +101,31 @@ function onSubmitQuiz()
         ];
     }
 
+    // Calculate time taken
+    $timeTaken = $startedAt ? now()->diffInSeconds($startedAt) : null;
+
+    // Save quiz attempt to database
+    if (Auth::check()) {
+        $attempt = QuizAttempt::create([
+            'user_id' => Auth::id(),
+            'quiz_id' => $quizId,
+            'score' => $score,
+            'total_questions' => count($questions),
+            'answers' => $answers,
+            'started_at' => $startedAt,
+            'completed_at' => now(),
+            'time_taken' => $timeTaken,
+        ]);
+    }
+
+    // Clear session data
+    Session::forget(['current_quiz_id', 'current_quiz_questions', 'quiz_started_at']);
+
     $this['score'] = $score;
     $this['totalQuestions'] = count($questions);
     $this['percentage'] = ($score / count($questions)) * 100;
     $this['results'] = $results;
+    $this['timeTaken'] = $timeTaken;
 
     return [
         '#quiz-results' => $this->renderPartial('story-quiz/results')
@@ -273,17 +195,27 @@ function onSubmitQuiz()
     line-height: 1.7;
     background-color: #f9f9f9;
     position: relative; /* Required for canvas positioning */
+    z-index: 1; /* Base z-index for container */
 }
 
 .story-content p {
     margin-bottom: 0.8rem;
     position: relative; /* Ensure text appears above canvas */
-    z-index: 2;
+    z-index: 10; /* Higher z-index to ensure text is above canvas */
 }
 
 .story-content * {
     position: relative; /* Ensure all text content appears above canvas */
-    z-index: 2;
+    z-index: 10; /* Higher z-index to ensure all content is above canvas */
+}
+
+/* Ensure canvas stays behind text */
+.story-content canvas {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 1 !important; /* Canvas behind text */
+    pointer-events: none !important; /* Canvas doesn't intercept events */
 }
 
 /* Unified highlighting cursor for all devices */

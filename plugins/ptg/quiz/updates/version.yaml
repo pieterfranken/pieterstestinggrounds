@@ -1,0 +1,9 @@
+v1.0.0:
+    - Initialize PTG Quiz plugin
+    - create_quizzes_table.php
+    - create_questions_table.php
+    - create_question_options_table.php
+    - create_quiz_attempts_table.php
+v1.0.1:
+    - Seed initial quiz data
+    - seed_initial_quizzes.php
