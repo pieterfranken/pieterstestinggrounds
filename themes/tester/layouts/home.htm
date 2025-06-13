@@ -5,13 +5,6 @@ description = "Home page layout"
 security = "all"
 redirect = "auth/login"
 ==
-<?
-function onStart()
-{
-    // Check if the PTG.Quiz plugin is available
-    $this->page['progressAvailable'] = class_exists('\PTG\Quiz\Models\QuizAttempt');
-}
-?>
 <!DOCTYPE html>
 <html>
     <head>
