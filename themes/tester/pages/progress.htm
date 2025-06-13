@@ -10,6 +10,16 @@ redirect = "auth/login"
 [progressDashboard]
 showRecentDays = "30"
 ==
+<?
+function onStart()
+{
+    // Check if the PTG.Quiz plugin is available
+    if (!class_exists('\PTG\Quiz\Models\QuizAttempt')) {
+        $this['pluginNotAvailable'] = true;
+    }
+}
+?>
+==
 <div class="progress-dashboard">
     <div class="container">
         <!-- Dashboard Header -->
@@ -19,6 +29,29 @@ showRecentDays = "30"
         </div>
 
         {% if user %}
+            {% if pluginNotAvailable %}
+            <!-- Plugin not available message -->
+            <div class="alert alert-warning mb-4">
+                <h4><i class="bi bi-exclamation-triangle"></i> Progress Tracking Unavailable</h4>
+                <p>The progress tracking feature is currently not available on this server. Your quizzes will still work normally, but progress won't be saved.</p>
+                <p class="mb-0"><small>To enable progress tracking, the PTG.Quiz plugin needs to be installed and the database needs to be migrated.</small></p>
+            </div>
+
+            <!-- Fallback: Show basic quiz links -->
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="bi bi-graph-up" style="font-size: 4rem; color: var(--accent-color); opacity: 0.5;"></i>
+                </div>
+                <h3 style="color: var(--primary-color); font-weight: 300;">Take a Quiz</h3>
+                <p class="lead mb-4" style="color: var(--text-color); font-weight: 300;">
+                    Choose from our available quiz types below.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg">Take Random Quiz</a>
+                    <a href="{{ 'story-quizzes'|page }}" class="btn btn-outline-primary btn-lg">Story Quizzes</a>
+                </div>
+            </div>
+            {% else %}
             <!-- Debug: User is logged in as {{ user.first_name }} -->
 
             <!-- Progress Dashboard Component -->
@@ -163,6 +196,7 @@ showRecentDays = "30"
                     <a href="{{ 'story-quizzes'|page }}" class="btn btn-outline-primary btn-lg">Story Quizzes</a>
                 </div>
             </div>
+            {% endif %}
             {% endif %}
 
         {% else %}

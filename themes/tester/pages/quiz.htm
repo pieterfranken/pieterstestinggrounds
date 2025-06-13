@@ -337,19 +337,24 @@ function onSubmitQuiz()
     $totalQuestions = count($questions);
     $percentage = ($score / $totalQuestions) * 100;
 
-    // Save quiz attempt to database
+    // Save quiz attempt to database (if plugin is available)
     $user = Auth::user();
-    if ($user) {
-        \PTG\Quiz\Models\QuizAttempt::create([
-            'user_id' => $user->id,
-            'quiz_type' => 'random',
-            'quiz_identifier' => null,
-            'score' => $score,
-            'total_questions' => $totalQuestions,
-            'percentage' => $percentage,
-            'questions_data' => $results,
-            'completed_at' => now()
-        ]);
+    if ($user && class_exists('\PTG\Quiz\Models\QuizAttempt')) {
+        try {
+            \PTG\Quiz\Models\QuizAttempt::create([
+                'user_id' => $user->id,
+                'quiz_type' => 'random',
+                'quiz_identifier' => null,
+                'score' => $score,
+                'total_questions' => $totalQuestions,
+                'percentage' => $percentage,
+                'questions_data' => $results,
+                'completed_at' => now()
+            ]);
+        } catch (Exception $e) {
+            // Silently fail if database table doesn't exist
+            // Quiz will still work, just won't save progress
+        }
     }
 
     $this['score'] = $score;

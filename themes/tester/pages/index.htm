@@ -3,6 +3,13 @@ title = "Home"
 url = "/"
 layout = "home"
 ==
+<?
+function onStart()
+{
+    // Check if the PTG.Quiz plugin is available
+    $this['progressAvailable'] = class_exists('\PTG\Quiz\Models\QuizAttempt');
+}
+?>
 <!-- Hero Section -->
 <div class="hero-section">
     <div class="container">
@@ -50,7 +57,7 @@ layout = "home"
                             </div>
                         </a>
                     </div>
-                    {% if user %}
+                    {% if user and progressAvailable %}
                     <div class="col-md-4">
                         <a href="{{ 'progress'|page }}" class="tool-card-link">
                             <div class="tool-card">

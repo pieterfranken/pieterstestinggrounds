@@ -5,6 +5,13 @@ description = "Home page layout"
 security = "all"
 redirect = "auth/login"
 ==
+<?
+function onStart()
+{
+    // Check if the PTG.Quiz plugin is available
+    $this->page['progressAvailable'] = class_exists('\PTG\Quiz\Models\QuizAttempt');
+}
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -310,7 +317,7 @@ redirect = "auth/login"
                         <li class="nav-item">
                             <a class="nav-link {% if this.page.id == 'story-quizzes' or this.page.id == 'story-quiz' or this.page.id == 'story-quiz-2' %}active{% endif %}" href="{{ 'story-quizzes'|page }}">Story Quizzes</a>
                         </li>
-                        {% if user %}
+                        {% if user and progressAvailable %}
                         <li class="nav-item">
                             <a class="nav-link {% if this.page.id == 'progress' %}active{% endif %}" href="{{ 'progress'|page }}">Progress</a>
                         </li>
@@ -378,7 +385,7 @@ redirect = "auth/login"
                             <li><a href="{{ 'index'|page }}">Home</a></li>
                             <li><a href="{{ 'quiz'|page }}">Quiz</a></li>
                             <li><a href="{{ 'story-quizzes'|page }}">Story Quizzes</a></li>
-                            {% if user %}
+                            {% if user and progressAvailable %}
                             <li><a href="{{ 'progress'|page }}">Progress Dashboard</a></li>
                             {% endif %}
                         </ul>
