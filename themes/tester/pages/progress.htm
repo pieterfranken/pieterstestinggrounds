@@ -1,0 +1,174 @@
+##
+title = "Progress Dashboard"
+url = "/progress"
+layout = "home"
+
+[session]
+security = "user"
+redirect = "auth/login"
+
+[progressDashboard]
+showRecentDays = "30"
+==
+<div class="progress-dashboard">
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1>Your Progress Dashboard</h1>
+            <p class="subtitle">Track your learning journey and achievements</p>
+        </div>
+
+        {% if user %}
+            <!-- Debug: User is logged in as {{ user.first_name }} -->
+
+            <!-- Progress Dashboard Component -->
+            {% component 'progressDashboard' %}
+
+            <!-- Dashboard Content -->
+            {% if totalAttempts > 0 %}
+
+            <!-- Study Streak -->
+            {% if studyStreak > 0 %}
+            <div class="study-streak">
+                <div class="streak-number">{{ studyStreak }}</div>
+                <div class="streak-label">Day Study Streak! 🔥</div>
+            </div>
+            {% endif %}
+
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" data-count="{{ totalAttempts }}">{{ totalAttempts }}</div>
+                    <div class="stat-label">Total Quizzes</div>
+                    {% if recentAttempts > 0 %}
+                        <div class="stat-change positive">+{{ recentAttempts }} this month</div>
+                    {% endif %}
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-value">{{ averageScore|round }}%</div>
+                    <div class="stat-label">Average Score</div>
+                    {% if recentAverageScore > averageScore %}
+                        <div class="stat-change positive">↗ Improving</div>
+                    {% elseif recentAverageScore < averageScore %}
+                        <div class="stat-change negative">↘ Recent dip</div>
+                    {% endif %}
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-value">{{ bestScore|round }}%</div>
+                    <div class="stat-label">Best Score</div>
+                    {% if bestScore == 100 %}
+                        <div class="stat-change positive">Perfect! 🌟</div>
+                    {% endif %}
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-value" data-count="{{ recentAttempts }}">{{ recentAttempts }}</div>
+                    <div class="stat-label">Recent Activity</div>
+                    <div class="stat-change">Last 30 days</div>
+                </div>
+            </div>
+
+            <!-- Performance Charts -->
+            <div class="charts-section">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="chart-container" data-chart="performance-trend" data-chart-data="{{ performanceTrend|json_encode }}">
+                            <h3 class="chart-title">Performance Trend</h3>
+                            <p class="text-center text-muted">Your progress over the last 30 days</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container" data-chart="quiz-type-breakdown" data-chart-data="{{ quizTypeStats|json_encode }}">
+                            <h3 class="chart-title">Quiz Type Breakdown</h3>
+                            <p class="text-center text-muted">Performance by quiz category</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            {% if achievements %}
+            <div class="achievements-section">
+                <h2 class="text-center mb-4" style="color: var(--primary-color); font-weight: 300;">Achievements</h2>
+                <div class="achievements-grid">
+                    {% for achievement in achievements %}
+                    <div class="achievement-card {{ achievement.earned ? 'earned' : '' }}">
+                        <div class="achievement-icon">
+                            <i class="{{ achievement.icon }}"></i>
+                        </div>
+                        <div class="achievement-name">{{ achievement.name }}</div>
+                        <div class="achievement-description">{{ achievement.description }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Recent Activity -->
+            {% if recentActivity %}
+            <div class="recent-activity">
+                <h3 class="mb-3" style="color: var(--primary-color); font-weight: 400;">Recent Quiz Activity</h3>
+                {% for attempt in recentActivity %}
+                <div class="activity-item">
+                    <div class="activity-info">
+                        <div class="activity-title">
+                            {{ attempt.quiz_type|title }} Quiz
+                            {% if attempt.quiz_identifier %}
+                                - {{ attempt.quiz_identifier }}
+                            {% endif %}
+                        </div>
+                        <div class="activity-meta">
+                            {{ attempt.completed_at|date('M j, Y g:i A') }}
+                        </div>
+                    </div>
+                    <div class="activity-score">
+                        <span class="score-badge 
+                            {% if attempt.percentage >= 90 %}score-excellent
+                            {% elseif attempt.percentage >= 80 %}score-good
+                            {% elseif attempt.percentage >= 70 %}score-average
+                            {% elseif attempt.percentage >= 60 %}score-below
+                            {% else %}score-poor
+                            {% endif %}">
+                            {{ attempt.score }}/{{ attempt.total_questions }} ({{ attempt.percentage|round }}%)
+                        </span>
+                        <div class="mt-1">
+                            <small class="text-muted">{{ attempt.performance_level }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Quick Actions -->
+            <div class="text-center mt-4">
+                <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg me-3">Take Random Quiz</a>
+                <a href="{{ 'story-quizzes'|page }}" class="btn btn-outline-primary btn-lg">Story Quizzes</a>
+            </div>
+
+            {% else %}
+            <!-- No quiz attempts yet -->
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="bi bi-graph-up" style="font-size: 4rem; color: var(--accent-color); opacity: 0.5;"></i>
+                </div>
+                <h3 style="color: var(--primary-color); font-weight: 300;">Start Your Learning Journey</h3>
+                <p class="lead mb-4" style="color: var(--text-color); font-weight: 300;">
+                    Take your first quiz to begin tracking your progress and achievements.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg">Take Random Quiz</a>
+                    <a href="{{ 'story-quizzes'|page }}" class="btn btn-outline-primary btn-lg">Story Quizzes</a>
+                </div>
+            </div>
+            {% endif %}
+
+        {% else %}
+            <div class="text-center">
+                <p class="lead">Please <a href="{{ 'auth/login'|page }}">sign in</a> to view your progress dashboard.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>

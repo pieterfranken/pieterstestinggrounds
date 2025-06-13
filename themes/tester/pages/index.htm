@@ -24,7 +24,7 @@ layout = "home"
 
                 <!-- Tool Cards integrated into Hero Section -->
                 <div class="row g-4 justify-content-center">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <a href="{{ 'quiz'|page }}" class="tool-card-link">
                             <div class="tool-card">
                                 <h3 class="h6">Knowledge Quiz</h3>
@@ -37,7 +37,7 @@ layout = "home"
                             </div>
                         </a>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <a href="{{ 'story-quizzes'|page }}" class="tool-card-link">
                             <div class="tool-card">
                                 <h3 class="h6">Story Quizzes</h3>
@@ -50,6 +50,16 @@ layout = "home"
                             </div>
                         </a>
                     </div>
+                    {% if user %}
+                    <div class="col-md-4">
+                        <a href="{{ 'progress'|page }}" class="tool-card-link">
+                            <div class="tool-card">
+                                <h3 class="h6">Progress Dashboard</h3>
+                                <p class="small text-muted">Track your learning journey and achievements</p>
+                            </div>
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

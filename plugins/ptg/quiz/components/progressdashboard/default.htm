@@ -1,0 +1,20 @@
+<!-- Progress Dashboard Component -->
+{% if totalAttempts > 0 %}
+    <!-- Component content is handled by the page template -->
+    <!-- This partial is loaded by the component but content is in the page -->
+{% else %}
+    <!-- No quiz attempts yet -->
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="bi bi-graph-up" style="font-size: 4rem; color: var(--accent-color); opacity: 0.5;"></i>
+        </div>
+        <h3 style="color: var(--primary-color); font-weight: 300;">Start Your Learning Journey</h3>
+        <p class="lead mb-4" style="color: var(--text-color); font-weight: 300;">
+            Take your first quiz to begin tracking your progress and achievements.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg">Take Random Quiz</a>
+            <a href="{{ 'story-quizzes'|page }}" class="btn btn-outline-primary btn-lg">Story Quizzes</a>
+        </div>
+    </div>
+{% endif %}

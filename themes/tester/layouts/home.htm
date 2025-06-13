@@ -310,6 +310,11 @@ redirect = "auth/login"
                         <li class="nav-item">
                             <a class="nav-link {% if this.page.id == 'story-quizzes' or this.page.id == 'story-quiz' or this.page.id == 'story-quiz-2' %}active{% endif %}" href="{{ 'story-quizzes'|page }}">Story Quizzes</a>
                         </li>
+                        {% if user %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if this.page.id == 'progress' %}active{% endif %}" href="{{ 'progress'|page }}">Progress</a>
+                        </li>
+                        {% endif %}
 
                         <!-- Authentication Links -->
                         {% if user %}
@@ -373,6 +378,9 @@ redirect = "auth/login"
                             <li><a href="{{ 'index'|page }}">Home</a></li>
                             <li><a href="{{ 'quiz'|page }}">Quiz</a></li>
                             <li><a href="{{ 'story-quizzes'|page }}">Story Quizzes</a></li>
+                            {% if user %}
+                            <li><a href="{{ 'progress'|page }}">Progress Dashboard</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
