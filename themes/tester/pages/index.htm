@@ -57,12 +57,18 @@ function onStart()
                             </div>
                         </a>
                     </div>
-                    {% if user and progressAvailable %}
+                    {% if user %}
                     <div class="col-md-4">
                         <a href="{{ 'progress'|page }}" class="tool-card-link">
                             <div class="tool-card">
                                 <h3 class="h6">Progress Dashboard</h3>
-                                <p class="small text-muted">Track your learning journey and achievements</p>
+                                <p class="small text-muted">
+                                    {% if progressAvailable %}
+                                        Track your learning journey and achievements
+                                    {% else %}
+                                        View available quizzes and features
+                                    {% endif %}
+                                </p>
                             </div>
                         </a>
                     </div>

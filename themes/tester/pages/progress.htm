@@ -30,25 +30,56 @@ function onStart()
 
         {% if user %}
             {% if pluginNotAvailable %}
-            <!-- Plugin not available message -->
-            <div class="alert alert-warning mb-4">
-                <h4><i class="bi bi-exclamation-triangle"></i> Progress Tracking Unavailable</h4>
-                <p>The progress tracking feature is currently not available on this server. Your quizzes will still work normally, but progress won't be saved.</p>
-                <p class="mb-0"><small>To enable progress tracking, the PTG.Quiz plugin needs to be installed and the database needs to be migrated.</small></p>
+            <!-- Progress tracking not available - show useful alternative content -->
+            <div class="alert alert-info mb-4">
+                <h4><i class="bi bi-info-circle"></i> Welcome to PTG Dashboard</h4>
+                <p>Your personal learning hub for Pieters Testing Grounds. Progress tracking will be available soon!</p>
             </div>
 
-            <!-- Fallback: Show basic quiz links -->
-            <div class="text-center py-5">
-                <div class="mb-4">
-                    <i class="bi bi-graph-up" style="font-size: 4rem; color: var(--accent-color); opacity: 0.5;"></i>
+            <!-- Available Features -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-question-circle" style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
+                            <h5 class="card-title">Knowledge Quiz</h5>
+                            <p class="card-text">Test your knowledge with 10 random questions from our diverse question pool covering various topics.</p>
+                            <a href="{{ 'quiz'|page }}" class="btn btn-primary">Start Quiz</a>
+                        </div>
+                    </div>
                 </div>
-                <h3 style="color: var(--primary-color); font-weight: 300;">Take a Quiz</h3>
-                <p class="lead mb-4" style="color: var(--text-color); font-weight: 300;">
-                    Choose from our available quiz types below.
-                </p>
-                <div class="d-flex justify-content-center gap-3">
-                    <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg">Take Random Quiz</a>
-                    <a href="{{ 'story-quizzes'|page }}" class="btn btn-outline-primary btn-lg">Story Quizzes</a>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-book" style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
+                            <h5 class="card-title">Story Quizzes</h5>
+                            <p class="card-text">Read engaging stories and test your comprehension with our interactive highlighting feature.</p>
+                            <a href="{{ 'story-quizzes'|page }}" class="btn btn-primary">Browse Stories</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coming Soon Features -->
+            <div class="text-center py-4" style="background: var(--light-gray); border-radius: 8px;">
+                <h4 style="color: var(--primary-color); font-weight: 300; margin-bottom: 1rem;">Coming Soon</h4>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <i class="bi bi-graph-up" style="font-size: 2rem; color: var(--accent-color); opacity: 0.7;"></i>
+                        <p class="small mt-2 mb-0">Progress Tracking</p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="bi bi-trophy" style="font-size: 2rem; color: var(--accent-color); opacity: 0.7;"></i>
+                        <p class="small mt-2 mb-0">Achievements</p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="bi bi-calendar-check" style="font-size: 2rem; color: var(--accent-color); opacity: 0.7;"></i>
+                        <p class="small mt-2 mb-0">Study Streaks</p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="bi bi-bar-chart" style="font-size: 2rem; color: var(--accent-color); opacity: 0.7;"></i>
+                        <p class="small mt-2 mb-0">Performance Analytics</p>
+                    </div>
                 </div>
             </div>
             {% else %}
