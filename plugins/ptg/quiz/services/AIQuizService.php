@@ -328,6 +328,8 @@ class AIQuizService
 
         return "Create {$count} multiple choice questions about {$topic}.{$difficultyNote} Focus on core concepts, not recent updates.
 
+CRITICAL: Each question must have exactly 4 options (A, B, C, D). Never use fewer than 4 options.
+
 Return only JSON:
 [
   {
@@ -364,6 +366,17 @@ Return only JSON:
             foreach ($questions as $index => $question) {
                 if (!isset($question['question'], $question['options'], $question['correct'])) {
                     throw new Exception('Invalid question structure at index ' . $index);
+                }
+
+                // Ensure exactly 4 options (A, B, C, D)
+                if (!is_array($question['options']) || count($question['options']) !== 4) {
+                    throw new Exception('Question at index ' . $index . ' must have exactly 4 options (A, B, C, D)');
+                }
+
+                $expectedKeys = ['A', 'B', 'C', 'D'];
+                $actualKeys = array_keys($question['options']);
+                if ($actualKeys !== $expectedKeys) {
+                    throw new Exception('Question at index ' . $index . ' options must be labeled A, B, C, D');
                 }
             }
 
