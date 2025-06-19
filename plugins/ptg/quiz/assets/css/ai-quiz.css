@@ -168,15 +168,6 @@
     position: relative;
 }
 
-.explanation-text::before {
-    content: '🤖';
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.2rem;
-    opacity: 0.7;
-}
-
 /* Score Display */
 .score-display {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

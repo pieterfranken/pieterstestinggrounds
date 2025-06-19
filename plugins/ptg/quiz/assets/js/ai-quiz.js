@@ -134,12 +134,12 @@ function updateProgress() {
     const submitButton = document.querySelector('button[type="submit"]');
     if (submitButton) {
         if (answeredQuestions === totalQuestions) {
-            submitButton.classList.remove('btn-outline-success');
-            submitButton.classList.add('btn-success');
+            submitButton.classList.remove('btn-outline-primary');
+            submitButton.classList.add('btn-primary');
             submitButton.innerHTML = '<i class="bi bi-check-lg me-2"></i>Submit Complete Quiz';
         } else {
-            submitButton.classList.add('btn-outline-success');
-            submitButton.classList.remove('btn-success');
+            submitButton.classList.add('btn-outline-primary');
+            submitButton.classList.remove('btn-primary');
             submitButton.innerHTML = '<i class="bi bi-check-lg me-2"></i>Submit Quiz & Get AI Explanations';
         }
     }

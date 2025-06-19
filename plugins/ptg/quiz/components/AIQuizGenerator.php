@@ -88,7 +88,7 @@ class AIQuizGenerator extends ComponentBase
             
             return [
                 '#ai-quiz-container' => $this->renderPartial('ai-quiz/quiz-form'),
-                '#quiz-status' => '<div class="alert alert-success">Generated ' . count($questions) . ' questions about "' . $topic . '"!</div>'
+                '#quiz-status' => '<div class="alert alert-primary">Generated ' . count($questions) . ' questions about "' . $topic . '"!</div>'
             ];
 
         } catch (\Exception $e) {
