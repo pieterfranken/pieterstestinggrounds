@@ -344,6 +344,9 @@ CRITICAL REQUIREMENTS:
 - Double-check your knowledge before marking an answer as correct
 - Make incorrect options plausible but clearly wrong to someone with proper knowledge
 - Vary the correct answers - don't always use A. Mix between A, B, C, and D randomly.
+- AVOID GIVEAWAYS: Never include the answer or obvious hints in the question text
+- Example of BAD question: Which anime features Naruto Uzumaki? (answer: Naruto)
+- Example of GOOD question: What is the main character name in the anime about a young ninja from Hidden Leaf Village?
 
 Return only JSON:
 [
@@ -359,7 +362,10 @@ Return only JSON:
   }
 ]
 
-ACCURACY CHECK: Before finalizing, verify that your marked correct answer is actually correct.
+FINAL CHECKS: Before finalizing, verify that:
+1. Your marked correct answer is actually correct
+2. The question does not give away the answer
+3. All options are plausible to someone unfamiliar with the topic
 Remember: Distribute correct answers randomly among A, B, C, and D options.";
     }
 
@@ -402,6 +408,20 @@ ACCURACY REQUIREMENTS:
 - Ensure incorrect options are clearly wrong to someone with proper knowledge
 - Base answers on well-established facts, not opinions or recent changes
 
+QUESTION QUALITY REQUIREMENTS:
+- AVOID GIVEAWAYS: Never include the answer or obvious hints in the question text
+- Do not mention the correct answer directly in the question
+- Use descriptive phrases instead of proper names when possible
+- Make questions require actual knowledge, not just reading comprehension
+- Bad examples:
+  * Which anime features Naruto Uzumaki? (gives away answer: Naruto)
+  * Which anime uses Death Notes? (gives away answer: Death Note)
+  * Which language uses .py files? (gives away answer: Python)
+- Good examples:
+  * What is the main character name in the ninja anime from Hidden Leaf Village?
+  * Which anime involves supernatural notebooks that can cause deaths?
+  * Which programming language is known for its readable syntax and snake mascot?
+
 CRITICAL ANSWER DISTRIBUTION REQUIREMENT:
 - DO NOT make all correct answers 'A'
 - Distribute correct answers across different options: {$answerHint}
@@ -424,7 +444,12 @@ Return ONLY a valid JSON array with this exact structure:
   }
 ]
 
-FINAL CHECK: Before submitting, confirm your correct answers are actually correct.
+FINAL CHECKS: Before submitting, confirm that:
+1. Your correct answers are actually correct
+2. Questions do NOT contain any words from the correct answer
+3. Questions use descriptive phrases instead of proper names when possible
+4. All options are unique and plausible
+5. Someone could not answer correctly just by reading the question
 Do not include any text before or after the JSON. Start your response with [ and end with ].";
     }
 
