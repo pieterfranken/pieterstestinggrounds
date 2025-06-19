@@ -2,6 +2,7 @@
 
 use Cms\Classes\ComponentBase;
 use PTG\Quiz\Models\QuizAttempt;
+use PTG\Quiz\Services\AIQuizService;
 use RainLab\User\Models\User;
 use Carbon\Carbon;
 use Auth;
@@ -62,8 +63,11 @@ class ProgressDashboard extends ComponentBase
 
         // Quiz type breakdown
         $this->page['quizTypeStats'] = $allAttempts->groupBy('quiz_type')->map(function ($attempts, $type) {
+            // Format quiz type names for better display
+            $displayType = $this->formatQuizTypeName($type);
+
             return [
-                'type' => $type,
+                'type' => $displayType,
                 'count' => $attempts->count(),
                 'average' => $attempts->avg('percentage'),
                 'best' => $attempts->max('percentage')
@@ -81,6 +85,9 @@ class ProgressDashboard extends ComponentBase
 
         // Study streak
         $this->page['studyStreak'] = $this->calculateStudyStreak($allAttempts);
+
+        // AI-powered insights
+        $this->page['aiInsights'] = $this->getAIInsights($allAttempts);
     }
 
     protected function getPerformanceTrend($userId, $days)
@@ -199,5 +206,68 @@ class ProgressDashboard extends ComponentBase
         }
 
         return $streak;
+    }
+
+    /**
+     * Format quiz type names for better display
+     */
+    protected function formatQuizTypeName($type)
+    {
+        switch ($type) {
+            case 'ai_generated':
+                return 'AI';
+            case 'story':
+                return 'Story';
+            case 'knowledge':
+                return 'Knowledge';
+            default:
+                return ucfirst($type);
+        }
+    }
+
+    /**
+     * Get AI-powered insights about user performance
+     */
+    protected function getAIInsights($attempts)
+    {
+        try {
+            $aiService = new AIQuizService();
+            return $aiService->analyzePerformance($attempts->toArray());
+        } catch (\Exception $e) {
+            // Fallback to basic insights if AI service fails
+            return [
+                'message' => 'Keep up the great work! Regular practice leads to improvement.',
+                'performance' => 'AI insights temporarily unavailable.'
+            ];
+        }
+    }
+
+    /**
+     * AJAX handler for generating AI quiz questions
+     */
+    public function onGenerateAIQuiz()
+    {
+        $topic = post('topic', 'General Knowledge');
+        $difficulty = post('difficulty', 'medium');
+        $count = (int) post('count', 10);
+
+        try {
+            $aiService = new AIQuizService();
+            $questions = $aiService->generateQuestions($topic, $count, $difficulty);
+
+            // Store in session for quiz taking
+            session(['ai_generated_quiz' => $questions]);
+
+            return [
+                'success' => true,
+                'questions' => $questions,
+                'message' => "Generated {$count} questions about {$topic}!"
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Failed to generate AI quiz. Please try again.'
+            ];
+        }
     }
 }

@@ -1,0 +1,209 @@
+##
+title = "AI Quiz Generator"
+url = "/ai-quiz"
+layout = "home"
+
+[session]
+security = "user"
+redirect = "auth/login"
+
+[aiQuizGenerator]
+defaultTopic = "General Knowledge"
+defaultCount = "10"
+==
+<!-- AI Quiz Generator Page -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <!-- Page Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 mb-3">
+                    <i class="bi bi-robot text-primary me-3"></i>
+                    AI Quiz Generator
+                </h1>
+                <p class="lead text-muted">
+                    Create personalized quizzes on any topic using artificial intelligence. 
+                    Get instant feedback with detailed explanations.
+                </p>
+            </div>
+
+            <!-- Status Messages -->
+            <div id="quiz-status"></div>
+
+            <!-- Main Quiz Container -->
+            <div id="ai-quiz-container">
+                {% if showQuiz %}
+                    {% partial 'ai-quiz/quiz-form' %}
+                {% else %}
+                    {% partial 'ai-quiz/generator-form' %}
+                {% endif %}
+            </div>
+
+            <!-- Features Section -->
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-magic display-6 text-primary"></i>
+                        </div>
+                        <h5>AI-Powered Generation</h5>
+                        <p class="text-muted">
+                            Advanced AI creates unique questions tailored to your chosen topic and difficulty level.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-chat-square-text display-6 text-success"></i>
+                        </div>
+                        <h5>Smart Explanations</h5>
+                        <p class="text-muted">
+                            Get detailed AI-generated explanations for every answer to enhance your learning.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-graph-up display-6 text-info"></i>
+                        </div>
+                        <h5>Progress Tracking</h5>
+                        <p class="text-muted">
+                            Track your performance across different topics and difficulty levels over time.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="card mt-5 border-0 bg-light">
+                <div class="card-body">
+                    <h4 class="text-center mb-4">
+                        <i class="bi bi-question-circle me-2"></i>
+                        How It Works
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                                1
+                            </div>
+                            <h6>Choose Topic</h6>
+                            <small class="text-muted">Enter any subject you want to learn about</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                                2
+                            </div>
+                            <h6>AI Generates</h6>
+                            <small class="text-muted">Our AI creates custom questions instantly</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                                3
+                            </div>
+                            <h6>Take Quiz</h6>
+                            <small class="text-muted">Answer questions at your own pace</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                                4
+                            </div>
+                            <h6>Learn More</h6>
+                            <small class="text-muted">Get AI explanations and track progress</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Topics -->
+            <div class="card mt-4 border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        Popular Quiz Topics
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Programming Languages (JavaScript, Python, Java)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Science Topics (Biology, Chemistry, Physics)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    History (World Wars, Ancient Civilizations)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Literature (Shakespeare, Modern Poetry)
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Geography (Countries, Capitals, Landmarks)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Mathematics (Algebra, Geometry, Statistics)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Technology (AI, Web Development, Cybersecurity)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Arts & Culture (Music, Painting, Film)
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+    background: white;
+    border: 1px solid #e9ecef;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
+}
+
+.step-number {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .feature-card {
+        margin-bottom: 20px;
+    }
+}
+</style>

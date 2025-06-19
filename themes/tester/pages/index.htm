@@ -22,43 +22,66 @@ layout = "home"
                     </p>
                 {% endif %}
 
-                <!-- Tool Cards integrated into Hero Section -->
+                <!-- Main Action Cards -->
                 <div class="row g-4 justify-content-center">
-                    <div class="col-md-4">
-                        <a href="{{ 'quiz'|page }}" class="tool-card-link">
-                            <div class="tool-card">
-                                <h3 class="h6">Knowledge Quiz</h3>
-                                <p class="small text-muted">10 random questions from 50 diverse topics</p>
-                                {% if not user %}
-                                    <p class="small" style="color: var(--accent-color); margin-top: 10px;">
-                                        <i class="bi bi-lock"></i> Login required
-                                    </p>
-                                {% endif %}
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="{{ 'story-quizzes'|page }}" class="tool-card-link">
-                            <div class="tool-card">
-                                <h3 class="h6">Story Quizzes</h3>
-                                <p class="small text-muted">Reading comprehension with highlighting</p>
-                                {% if not user %}
-                                    <p class="small" style="color: var(--accent-color); margin-top: 10px;">
-                                        <i class="bi bi-lock"></i> Login required
-                                    </p>
-                                {% endif %}
-                            </div>
-                        </a>
-                    </div>
                     {% if user %}
-                    <div class="col-md-4">
-                        <a href="{{ 'progress'|page }}" class="tool-card-link">
-                            <div class="tool-card">
-                                <h3 class="h6">Progress Dashboard</h3>
-                                <p class="small text-muted">Track your learning journey and achievements</p>
+                        <!-- Quiz Hub - Main Feature -->
+                        <div class="col-md-6">
+                            <a href="{{ 'quiz-hub'|page }}" class="tool-card-link">
+                                <div class="tool-card featured-card">
+                                    <div class="card-icon">
+                                        <i class="bi bi-collection"></i>
+                                    </div>
+                                    <h3 class="h5">Quiz Hub</h3>
+                                    <p class="small text-muted">
+                                        Choose from AI-generated quizzes, knowledge tests, or interactive stories.
+                                        All your learning options in one place.
+                                    </p>
+                                    <div class="feature-badges">
+                                        <span class="badge bg-primary">AI Quizzes</span>
+                                        <span class="badge bg-success">Knowledge Tests</span>
+                                        <span class="badge bg-info">Story Quizzes</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Progress Dashboard -->
+                        <div class="col-md-6">
+                            <a href="{{ 'progress'|page }}" class="tool-card-link">
+                                <div class="tool-card">
+                                    <div class="card-icon">
+                                        <i class="bi bi-graph-up"></i>
+                                    </div>
+                                    <h3 class="h5">Progress Dashboard</h3>
+                                    <p class="small text-muted">
+                                        Track your learning journey, view statistics, and monitor your improvement across all quiz types.
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                    {% else %}
+                        <!-- Single card for non-logged users -->
+                        <div class="col-md-8">
+                            <div class="tool-card login-required-card">
+                                <div class="card-icon">
+                                    <i class="bi bi-collection"></i>
+                                </div>
+                                <h3 class="h5">Quiz Hub</h3>
+                                <p class="small text-muted">
+                                    Access AI-generated quizzes, knowledge tests, and interactive stories.
+                                    Create an account to start your learning journey.
+                                </p>
+                                <div class="feature-badges mb-3">
+                                    <span class="badge bg-primary">AI Quizzes</span>
+                                    <span class="badge bg-success">Knowledge Tests</span>
+                                    <span class="badge bg-info">Story Quizzes</span>
+                                </div>
+                                <p class="small" style="color: var(--accent-color);">
+                                    <i class="bi bi-lock"></i> Login required to access quizzes
+                                </p>
                             </div>
-                        </a>
-                    </div>
+                        </div>
                     {% endif %}
                 </div>
             </div>

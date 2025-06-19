@@ -178,7 +178,8 @@ function onStart()
                 <div class="activity-item">
                     <div class="activity-info">
                         <div class="activity-title">
-                            {{ attempt.quiz_type|title }} Quiz
+                            {% set quiz_type_display = attempt.quiz_type == 'ai_generated' ? 'AI' : (attempt.quiz_type|title) %}
+                            {{ quiz_type_display }} Quiz
                             {% if attempt.quiz_identifier %}
                                 - {{ attempt.quiz_identifier }}
                             {% endif %}
@@ -208,8 +209,18 @@ function onStart()
 
             <!-- Quick Actions -->
             <div class="text-center mt-4">
-                <a href="{{ 'quiz'|page }}" class="btn btn-primary btn-lg me-3">Take Random Quiz</a>
-                <a href="{{ 'story-quizzes'|page }}" class="btn btn-outline-primary btn-lg">Story Quizzes</a>
+                <a href="{{ 'quiz-hub'|page }}" class="btn btn-primary btn-lg me-3">
+                    <i class="bi bi-collection me-2"></i>
+                    Quiz Hub
+                </a>
+                <a href="{{ 'ai-quiz'|page }}" class="btn btn-outline-primary btn-lg me-3">
+                    <i class="bi bi-robot me-2"></i>
+                    AI Quiz
+                </a>
+                <a href="{{ 'quiz'|page }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-play-circle me-2"></i>
+                    Random Quiz
+                </a>
             </div>
 
             {% else %}

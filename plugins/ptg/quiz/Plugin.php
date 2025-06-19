@@ -21,6 +21,7 @@ class Plugin extends PluginBase
     {
         return [
             'PTG\Quiz\Components\ProgressDashboard' => 'progressDashboard',
+            'PTG\Quiz\Components\AIQuizGenerator' => 'aiQuizGenerator',
         ];
     }
 

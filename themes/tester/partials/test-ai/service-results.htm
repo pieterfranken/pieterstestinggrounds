@@ -1,0 +1,37 @@
+{% if service_result == 'success' %}
+    <div class="alert alert-success">
+        <h6><i class="bi bi-check-circle me-2"></i>{{ service_message }}</h6>
+        
+        {% if service_questions %}
+            <h6 class="mt-3">Generated Questions:</h6>
+            {% for question in service_questions %}
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <h6>{{ loop.index }}. {{ question.question }}</h6>
+                        <ul class="mb-0">
+                            {% for key, option in question.options %}
+                                <li>
+                                    <strong>{{ key }}:</strong> {{ option }}
+                                    {% if key == question.correct %}
+                                        <span class="badge bg-success ms-1">✓ Correct</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% else %}
+    <div class="alert alert-danger">
+        <h6><i class="bi bi-exclamation-triangle me-2"></i>{{ service_message }}</h6>
+        
+        <h6 class="mt-3">What this means:</h6>
+        <ul>
+            <li>If Groq API test passed but this failed, there's an issue with our AI service wrapper</li>
+            <li>If both tests fail, it's likely a network or API key issue</li>
+            <li>The system will fall back to template questions automatically</li>
+        </ul>
+    </div>
+{% endif %}

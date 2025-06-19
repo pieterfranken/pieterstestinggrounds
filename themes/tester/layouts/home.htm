@@ -94,6 +94,39 @@ redirect = "auth/login"
                 margin-bottom: 10px;
             }
 
+            /* Enhanced Homepage Cards */
+            .featured-card {
+                border: 2px solid var(--accent-color);
+                background: linear-gradient(135deg, #fff, #f8f9ff);
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+                color: var(--accent-color);
+                margin-bottom: 1rem;
+            }
+
+            .feature-badges {
+                margin-top: 1rem;
+            }
+
+            .feature-badges .badge {
+                margin: 0 0.25rem 0.5rem 0;
+                font-size: 0.75rem;
+                font-weight: 400;
+            }
+
+            .login-required-card {
+                background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+                border: 1px solid var(--border-color);
+            }
+
+            .tool-card-link:hover .featured-card {
+                border-color: #2980b9;
+                box-shadow: 0 8px 25px rgba(52, 152, 219, 0.2);
+                transform: translateY(-3px);
+            }
+
             /* Navigation */
             .navbar {
                 background-color: #fff !important;
@@ -304,12 +337,18 @@ redirect = "auth/login"
                         <li class="nav-item">
                             <a class="nav-link {% if this.page.id == 'index' %}active{% endif %}" href="{{ 'index'|page }}">Home</a>
                         </li>
+                        {% if user %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if this.page.id == 'quiz-hub' or this.page.id == 'ai-quiz' or this.page.id == 'quiz' or this.page.id == 'story-quizzes' or this.page.id == 'story-quiz' or this.page.id == 'story-quiz-2' %}active{% endif %}" href="{{ 'quiz-hub'|page }}">Quiz Hub</a>
+                        </li>
+                        {% else %}
                         <li class="nav-item">
                             <a class="nav-link {% if this.page.id == 'quiz' %}active{% endif %}" href="{{ 'quiz'|page }}">Quiz</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if this.page.id == 'story-quizzes' or this.page.id == 'story-quiz' or this.page.id == 'story-quiz-2' %}active{% endif %}" href="{{ 'story-quizzes'|page }}">Story Quizzes</a>
                         </li>
+                        {% endif %}
                         {% if user %}
                         <li class="nav-item">
                             <a class="nav-link {% if this.page.id == 'progress' %}active{% endif %}" href="{{ 'progress'|page }}">Progress</a>
@@ -376,10 +415,12 @@ redirect = "auth/login"
                         <h5>Navigation</h5>
                         <ul class="list-unstyled">
                             <li><a href="{{ 'index'|page }}">Home</a></li>
+                            {% if user %}
+                            <li><a href="{{ 'quiz-hub'|page }}">Quiz Hub</a></li>
+                            <li><a href="{{ 'progress'|page }}">Progress Dashboard</a></li>
+                            {% else %}
                             <li><a href="{{ 'quiz'|page }}">Quiz</a></li>
                             <li><a href="{{ 'story-quizzes'|page }}">Story Quizzes</a></li>
-                            {% if user %}
-                            <li><a href="{{ 'progress'|page }}">Progress Dashboard</a></li>
                             {% endif %}
                         </ul>
                     </div>

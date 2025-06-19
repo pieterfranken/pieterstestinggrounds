@@ -1,0 +1,303 @@
+##
+title = "Quiz Hub"
+url = "/quiz-hub"
+layout = "home"
+
+[session]
+security = "user"
+redirect = "auth/login"
+==
+<!-- Quiz Hub - Central Quiz Selection -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <!-- Page Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 mb-3">
+                    <i class="bi bi-collection text-primary me-3"></i>
+                    Quiz Hub
+                </h1>
+                <p class="lead text-muted">
+                    Choose your learning adventure! Select from our variety of quiz types designed to challenge and educate.
+                </p>
+            </div>
+
+            <!-- Quiz Type Cards -->
+            <div class="row g-4">
+                <!-- AI Quiz Generator -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="quiz-type-card h-100">
+                        <div class="card-icon">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <h3>AI Quiz Generator</h3>
+                        <p class="description">
+                            Create personalized quizzes on any topic using artificial intelligence. 
+                            Get detailed explanations and learn from your mistakes.
+                        </p>
+                        <div class="features">
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>Any topic you choose</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>AI-powered explanations</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>Adjustable difficulty</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>5-20 questions</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/ai-quiz" class="btn btn-primary btn-lg w-100">
+                                <i class="bi bi-magic me-2"></i>
+                                Generate AI Quiz
+                            </a>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-lightning-charge"></i>
+                                Powered by Groq AI
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Knowledge Quiz -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="quiz-type-card h-100">
+                        <div class="card-icon">
+                            <i class="bi bi-brain"></i>
+                        </div>
+                        <h3>Knowledge Quiz</h3>
+                        <p class="description">
+                            Test your general knowledge with our curated collection of questions 
+                            covering 50+ diverse topics and subjects.
+                        </p>
+                        <div class="features">
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>50+ curated topics</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>Random question selection</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>Instant scoring</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>10 questions per quiz</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/quiz" class="btn btn-success btn-lg w-100">
+                                <i class="bi bi-play-circle me-2"></i>
+                                Start Knowledge Quiz
+                            </a>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-collection"></i>
+                                Classic quiz format
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story Quizzes -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="quiz-type-card h-100">
+                        <div class="card-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <h3>Story Quizzes</h3>
+                        <p class="description">
+                            Improve reading comprehension with interactive stories. 
+                            Highlight text and answer questions based on engaging narratives.
+                        </p>
+                        <div class="features">
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>Interactive stories</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>Text highlighting</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>Reading comprehension</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <span>Multiple difficulty levels</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/story-quizzes" class="btn btn-info btn-lg w-100">
+                                <i class="bi bi-book-half me-2"></i>
+                                Browse Stories
+                            </a>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-cursor-text"></i>
+                                Interactive reading
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Section -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="stats-banner">
+                        <div class="row text-center">
+                            <div class="col-md-3 col-6">
+                                <div class="stat-item">
+                                    <div class="stat-number">3</div>
+                                    <div class="stat-label">Quiz Types</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stat-item">
+                                    <div class="stat-number">∞</div>
+                                    <div class="stat-label">AI Topics</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stat-item">
+                                    <div class="stat-number">50+</div>
+                                    <div class="stat-label">Knowledge Topics</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stat-item">
+                                    <div class="stat-number">100%</div>
+                                    <div class="stat-label">Free to Use</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Link -->
+            <div class="text-center mt-4">
+                <a href="/progress" class="btn btn-outline-secondary">
+                    <i class="bi bi-graph-up me-2"></i>
+                    View Your Progress Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Quiz Hub Styles */
+.quiz-type-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz-type-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-color: #007bff;
+}
+
+.card-icon {
+    font-size: 3rem;
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+
+.quiz-type-card h3 {
+    color: #212529;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.description {
+    color: #6c757d;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.features {
+    margin-bottom: 2rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.feature-item i {
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.card-footer {
+    margin-top: auto;
+}
+
+.stats-banner {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid #dee2e6;
+}
+
+.stat-item {
+    padding: 1rem;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #007bff;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .quiz-type-card {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .stats-banner {
+        padding: 1.5rem;
+    }
+}
+</style>

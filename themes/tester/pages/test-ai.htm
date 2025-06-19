@@ -1,0 +1,154 @@
+##
+title = "Test AI"
+url = "/test-ai"
+layout = "home"
+==
+<?
+use Illuminate\Support\Facades\Http;
+
+function onStart()
+{
+    // Test AI service directly
+    $this['ai_provider'] = env('AI_PROVIDER');
+    $this['groq_key'] = env('GROQ_API_KEY') ? 'Set (***' . substr(env('GROQ_API_KEY'), -4) . ')' : 'Not set';
+}
+
+function onTestGroqDirect()
+{
+    try {
+        // Test Groq API directly using Laravel HTTP client
+        $apiKey = env('GROQ_API_KEY');
+        
+        if (empty($apiKey)) {
+            throw new Exception('Groq API key not found');
+        }
+        
+        $response = Http::timeout(30)->withHeaders([
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Content-Type' => 'application/json',
+        ])->post('https://api.groq.com/openai/v1/chat/completions', [
+            'model' => 'llama3-8b-8192',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => 'You are a helpful assistant. Respond with exactly one simple quiz question about JavaScript in this JSON format: {"question": "What is JavaScript?", "options": {"A": "A programming language", "B": "A coffee type", "C": "A book", "D": "A movie"}, "correct": "A"}'
+                ],
+                [
+                    'role' => 'user',
+                    'content' => 'Generate 1 simple JavaScript question'
+                ]
+            ],
+            'temperature' => 0.7,
+            'max_tokens' => 500
+        ]);
+
+        if ($response->successful()) {
+            $result = $response->json();
+            $content = $result['choices'][0]['message']['content'] ?? 'No content';
+            
+            $this['test_result'] = 'success';
+            $this['test_message'] = 'Groq API is working!';
+            $this['test_content'] = $content;
+            $this['test_raw'] = json_encode($result, JSON_PRETTY_PRINT);
+        } else {
+            $this['test_result'] = 'error';
+            $this['test_message'] = 'Groq API failed: ' . $response->status();
+            $this['test_content'] = $response->body();
+        }
+        
+    } catch (Exception $e) {
+        $this['test_result'] = 'error';
+        $this['test_message'] = 'Error: ' . $e->getMessage();
+        $this['test_content'] = '';
+    }
+    
+    return [
+        '#test-results' => $this->renderPartial('test-ai/results')
+    ];
+}
+
+function onTestAIService()
+{
+    try {
+        $aiService = new \PTG\Quiz\Services\AIQuizService();
+        $questions = $aiService->generateQuestions('JavaScript basics', 3, 'easy');
+        
+        $this['service_result'] = 'success';
+        $this['service_message'] = 'AI Service generated ' . count($questions) . ' questions';
+        $this['service_questions'] = $questions;
+        
+    } catch (Exception $e) {
+        $this['service_result'] = 'error';
+        $this['service_message'] = 'AI Service Error: ' . $e->getMessage();
+        $this['service_questions'] = [];
+    }
+    
+    return [
+        '#service-results' => $this->renderPartial('test-ai/service-results')
+    ];
+}
+?>
+==
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">🧪 AI Connection Test</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Current Configuration</h5>
+                    <ul>
+                        <li><strong>AI Provider:</strong> {{ ai_provider }}</li>
+                        <li><strong>Groq API Key:</strong> {{ groq_key }}</li>
+                    </ul>
+                    
+                    <hr>
+                    
+                    <h5>Test 1: Direct Groq API Call</h5>
+                    <p>This tests the Groq API connection directly.</p>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary"
+                        data-request="onTestGroqDirect"
+                        data-request-loading="Testing Groq API..."
+                    >
+                        🚀 Test Groq API
+                    </button>
+                    
+                    <div id="test-results" class="mt-3">
+                        <!-- Results will appear here -->
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5>Test 2: AI Service Class</h5>
+                    <p>This tests our AI service wrapper.</p>
+                    <button 
+                        type="button" 
+                        class="btn btn-success"
+                        data-request="onTestAIService"
+                        data-request-loading="Testing AI Service..."
+                    >
+                        🔧 Test AI Service
+                    </button>
+                    
+                    <div id="service-results" class="mt-3">
+                        <!-- Results will appear here -->
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="/ai-quiz" class="btn btn-outline-primary">
+                            🎯 Go to AI Quiz Generator
+                        </a>
+                        <a href="/ai-debug" class="btn btn-outline-secondary">
+                            🔧 AI Debug Panel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
