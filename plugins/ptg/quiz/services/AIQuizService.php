@@ -39,7 +39,7 @@ class AIQuizService
             'groq' => [
                 'api_key' => env('GROQ_API_KEY'), // Free tier: 100 requests/day
                 'api_url' => 'https://api.groq.com/openai/v1/chat/completions',
-                'model' => 'llama3-8b-8192',
+                'model' => 'llama3-70b-8192',
                 'free' => true
             ],
             'together' => [
@@ -149,12 +149,14 @@ class AIQuizService
                 $prompt .= "- {$key}: {$option}\n";
             }
             $prompt .= "\nProvide a helpful, educational explanation that:\n";
-            $prompt .= "1. Gently corrects their mistake\n";
-            $prompt .= "2. Explains why the correct answer is right\n";
-            $prompt .= "3. Briefly explains why their choice was incorrect\n";
-            $prompt .= "4. Is encouraging and supportive (not discouraging)\n";
-            $prompt .= "5. Helps them learn for next time\n";
-            $prompt .= "6. Is 2-3 sentences long\n";
+            $prompt .= "1. Starts with something like 'Ah, unfortunately you got it wrong' or 'Not quite right this time'\n";
+            $prompt .= "2. States 'the right answer is actually [correct answer]'\n";
+            $prompt .= "3. Explains why the correct answer is right\n";
+            $prompt .= "4. Briefly explains why their choice was incorrect\n";
+            $prompt .= "5. Is encouraging and supportive (not discouraging)\n";
+            $prompt .= "6. Helps them learn for next time\n";
+            $prompt .= "7. Is 2-3 sentences long\n";
+            $prompt .= "8. NEVER use the word 'indeed' in your response\n";
         }
 
         // Use cURL for explanation generation
@@ -224,9 +226,9 @@ class AIQuizService
             $userOption = $userAnswer ? ($options[$userAnswer] ?? 'your selection') : 'no answer provided';
 
             if ($userAnswer) {
-                return "Not quite right this time. You selected '{$userOption}', but the correct answer is '{$correctOption}' (option {$correctAnswer}). This is a common mistake - '{$correctOption}' is the most accurate choice for this question. Review the material and you'll get it next time!";
+                return "Ah, unfortunately you got it wrong. You selected '{$userOption}', but the right answer is actually '{$correctOption}' (option {$correctAnswer}). This is a common mistake - '{$correctOption}' is the most accurate choice for this question. Review the material and you'll get it next time!";
             } else {
-                return "You didn't select an answer for this question. The correct answer is '{$correctOption}' (option {$correctAnswer}). Make sure to read all options carefully and select the best choice. You've got this!";
+                return "Ah, unfortunately you didn't select an answer for this question. The right answer is actually '{$correctOption}' (option {$correctAnswer}). Make sure to read all options carefully and select the best choice. You've got this!";
             }
         }
     }

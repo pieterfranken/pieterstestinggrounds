@@ -8,61 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeAIQuiz() {
-    // Initialize topic suggestions
-    initTopicSuggestions();
-    
     // Initialize quiz form enhancements
     initQuizFormEnhancements();
-    
+
     // Initialize progress tracking
     initProgressTracking();
-    
+
     // Initialize accessibility features
     initAccessibilityFeatures();
 }
 
-/**
- * Topic Suggestions Functionality
- */
-function initTopicSuggestions() {
-    const topicInput = document.getElementById('topic');
-    const suggestionButtons = document.querySelectorAll('.topic-suggestion');
-    
-    if (!topicInput) return;
-    
-    // Handle suggestion button clicks
-    suggestionButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const topic = this.dataset.topic || this.textContent.trim();
-            topicInput.value = topic;
-            topicInput.focus();
-            
-            // Add visual feedback
-            this.classList.add('btn-primary');
-            this.classList.remove('btn-outline-secondary');
-            
-            // Reset other buttons
-            suggestionButtons.forEach(otherButton => {
-                if (otherButton !== this) {
-                    otherButton.classList.remove('btn-primary');
-                    otherButton.classList.add('btn-outline-secondary');
-                }
-            });
-            
-            setTimeout(() => {
-                this.classList.remove('btn-primary');
-                this.classList.add('btn-outline-secondary');
-            }, 1000);
-        });
-    });
-    
-    // Auto-suggestions based on input
-    topicInput.addEventListener('input', function() {
-        const value = this.value.toLowerCase();
-        const suggestions = getSuggestions(value);
-        showAutoSuggestions(suggestions);
-    });
-}
+
 
 /**
  * Quiz Form Enhancements
@@ -223,52 +179,7 @@ function initAccessibilityFeatures() {
 /**
  * Utility Functions
  */
-function getSuggestions(input) {
-    const commonTopics = [
-        'JavaScript Programming', 'Python Programming', 'Web Development',
-        'World History', 'American History', 'Ancient Rome',
-        'Biology', 'Chemistry', 'Physics', 'Mathematics',
-        'Geography', 'Literature', 'Art History', 'Music Theory',
-        'Computer Science', 'Data Science', 'Machine Learning'
-    ];
-    
-    return commonTopics.filter(topic => 
-        topic.toLowerCase().includes(input.toLowerCase())
-    ).slice(0, 5);
-}
 
-function showAutoSuggestions(suggestions) {
-    // Remove existing suggestions
-    const existingSuggestions = document.getElementById('auto-suggestions');
-    if (existingSuggestions) {
-        existingSuggestions.remove();
-    }
-    
-    if (suggestions.length === 0) return;
-    
-    const topicInput = document.getElementById('topic');
-    const suggestionsHTML = `
-        <div id="auto-suggestions" class="list-group position-absolute w-100" style="z-index: 1000; top: 100%;">
-            ${suggestions.map(suggestion => `
-                <button type="button" class="list-group-item list-group-item-action auto-suggestion-item" 
-                        data-topic="${suggestion}">
-                    ${suggestion}
-                </button>
-            `).join('')}
-        </div>
-    `;
-    
-    topicInput.parentElement.style.position = 'relative';
-    topicInput.insertAdjacentHTML('afterend', suggestionsHTML);
-    
-    // Handle suggestion clicks
-    document.querySelectorAll('.auto-suggestion-item').forEach(item => {
-        item.addEventListener('click', function() {
-            topicInput.value = this.dataset.topic;
-            document.getElementById('auto-suggestions').remove();
-        });
-    });
-}
 
 function validateForm(form) {
     const requiredFields = form.querySelectorAll('[required]');
@@ -323,6 +234,5 @@ function showValidationErrors() {
 // Export functions for external use
 window.AIQuiz = {
     updateProgress,
-    validateForm,
-    getSuggestions
+    validateForm
 };

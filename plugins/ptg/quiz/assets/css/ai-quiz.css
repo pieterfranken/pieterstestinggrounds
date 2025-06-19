@@ -74,11 +74,7 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Topic Suggestions */
-.topic-suggestion {
-    transition: all 0.2s ease;
-    border: 1px solid #dee2e6;
-}
+
 
 .topic-suggestion:hover {
     background-color: #007bff;

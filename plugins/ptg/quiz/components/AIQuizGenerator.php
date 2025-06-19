@@ -201,23 +201,5 @@ class AIQuizGenerator extends ComponentBase
         ];
     }
 
-    /**
-     * Get suggested topics
-     */
-    public function onGetSuggestedTopics()
-    {
-        $suggestions = [
-            'Science' => ['Biology', 'Chemistry', 'Physics', 'Astronomy', 'Environmental Science'],
-            'History' => ['World War II', 'Ancient Rome', 'American History', 'Medieval Times'],
-            'Technology' => ['Programming', 'Artificial Intelligence', 'Web Development', 'Cybersecurity'],
-            'Literature' => ['Shakespeare', 'Modern Poetry', 'Classic Novels', 'Short Stories'],
-            'Geography' => ['World Capitals', 'Mountain Ranges', 'Rivers and Lakes', 'Countries'],
-            'Mathematics' => ['Algebra', 'Geometry', 'Statistics', 'Calculus'],
-            'Arts' => ['Renaissance Art', 'Modern Art', 'Music Theory', 'Film History']
-        ];
 
-        return [
-            'suggestions' => $suggestions
-        ];
-    }
 }
