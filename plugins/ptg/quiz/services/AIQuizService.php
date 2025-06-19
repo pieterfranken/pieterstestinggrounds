@@ -72,17 +72,37 @@ class AIQuizService
      */
     public function generateQuestions($topic, $count = 10, $difficulty = 'medium')
     {
-        try {
-            // Try AI generation first
-            $questions = $this->callAIProvider($topic, $count, $difficulty);
-            if (!empty($questions)) {
-                return $questions;
+        $maxRetries = 10; // Increased retry limit
+        $baseDelay = 1; // Base delay in seconds
+
+        for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+            try {
+                Log::info("AI Quiz Generation Attempt {$attempt}", ['topic' => $topic, 'count' => $count, 'difficulty' => $difficulty]);
+
+                // Try AI generation
+                $questions = $this->callAIProvider($topic, $count, $difficulty);
+                if (!empty($questions)) {
+                    Log::info('AI Quiz Generation Success', ['questions_count' => count($questions), 'attempt' => $attempt]);
+                    return $questions;
+                }
+            } catch (Exception $e) {
+                Log::error("AI Quiz Generation Error (Attempt {$attempt}): " . $e->getMessage());
+
+                // If this is the last attempt, fall back to templates
+                if ($attempt === $maxRetries) {
+                    Log::warning('All AI attempts failed after ' . $maxRetries . ' tries, falling back to templates');
+                    break;
+                }
+
+                // Progressive delay: 1s, 2s, 3s, etc. (capped at 5s)
+                $delay = min($baseDelay * $attempt, 5);
+                Log::info("Waiting {$delay} seconds before retry...");
+                sleep($delay);
             }
-        } catch (Exception $e) {
-            Log::error('AI Quiz Generation Error: ' . $e->getMessage());
         }
 
-        // Fallback to template-based generation
+        // Fallback to template-based generation only after all retries exhausted
+        Log::warning('Using template questions as fallback');
         return $this->generateTemplateQuestions($topic, $count, $difficulty);
     }
 
@@ -299,28 +319,28 @@ class AIQuizService
      */
     protected function buildQuestionPrompt($topic, $count, $difficulty)
     {
-        return "Generate {$count} multiple choice questions about '{$topic}' at {$difficulty} difficulty level.
+        $difficultyNote = '';
+        if ($difficulty === 'easy') {
+            $difficultyNote = ' Make questions simple for beginners.';
+        } elseif ($difficulty === 'hard') {
+            $difficultyNote = ' Make questions advanced and challenging.';
+        }
 
-Format as valid JSON array with this structure:
+        return "Create {$count} multiple choice questions about {$topic}.{$difficultyNote} Focus on core concepts, not recent updates.
+
+Return only JSON:
 [
   {
-    \"question\": \"Question text here?\",
+    \"question\": \"Question?\",
     \"options\": {
       \"A\": \"Option A\",
-      \"B\": \"Option B\", 
+      \"B\": \"Option B\",
       \"C\": \"Option C\",
       \"D\": \"Option D\"
     },
     \"correct\": \"A\"
   }
-]
-
-Requirements:
-- Questions should be clear and unambiguous
-- All options should be plausible
-- Only one correct answer per question
-- Vary question types (factual, conceptual, application)
-- Return ONLY the JSON array, no other text";
+]";
     }
 
     /**
@@ -335,7 +355,7 @@ Requirements:
             $content = trim($content);
 
             $questions = json_decode($content, true);
-            
+
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new Exception('Invalid JSON format');
             }
@@ -362,7 +382,7 @@ Requirements:
     {
         $prompt = $this->buildQuestionPrompt($topic, $count, $difficulty);
 
-        $response = Http::timeout(30)->post($this->config['api_url'], [
+        $response = Http::timeout(45)->post($this->config['api_url'], [
             'model' => $this->config['model'],
             'prompt' => $prompt,
             'stream' => false
@@ -393,7 +413,7 @@ Requirements:
                 'Authorization: Bearer ' . $this->config['api_key'],
                 'Content-Type: application/json'
             ]);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 45);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // For Windows compatibility
 
             $data = [
