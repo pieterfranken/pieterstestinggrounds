@@ -12,10 +12,20 @@ class AIQuizService
     protected $provider;
     protected $config;
 
-    public function __construct()
+    public function __construct($provider = null)
     {
-        $this->provider = env('AI_PROVIDER', 'huggingface'); // Default to free option
+        $this->provider = $provider ?: env('AI_PROVIDER', 'groq'); // Default to groq
         $this->config = $this->getProviderConfig($this->provider);
+    }
+
+    /**
+     * Set the AI provider dynamically
+     */
+    public function setProvider($provider)
+    {
+        $this->provider = $provider;
+        $this->config = $this->getProviderConfig($this->provider);
+        return $this;
     }
 
     /**
@@ -329,6 +339,7 @@ class AIQuizService
         return "Create {$count} multiple choice questions about {$topic}.{$difficultyNote} Focus on core concepts, not recent updates.
 
 CRITICAL: Each question must have exactly 4 options (A, B, C, D). Never use fewer than 4 options.
+IMPORTANT: Vary the correct answers - don't always use A. Mix between A, B, C, and D randomly.
 
 Return only JSON:
 [
@@ -340,9 +351,70 @@ Return only JSON:
       \"C\": \"Option C\",
       \"D\": \"Option D\"
     },
-    \"correct\": \"A\"
+    \"correct\": \"B\"
   }
-]";
+]
+
+Remember: Distribute correct answers randomly among A, B, C, and D options.";
+    }
+
+    /**
+     * Build specialized prompt for OpenAI GPT-3.5 Turbo
+     */
+    protected function buildOpenAIPrompt($topic, $count, $difficulty)
+    {
+        $difficultyInstructions = '';
+        switch ($difficulty) {
+            case 'easy':
+                $difficultyInstructions = 'Create questions suitable for beginners or high school level. Use clear, simple language and focus on basic concepts.';
+                break;
+            case 'hard':
+                $difficultyInstructions = 'Create advanced questions that require deep understanding. Include complex scenarios and detailed knowledge.';
+                break;
+            default:
+                $difficultyInstructions = 'Create questions at a medium difficulty level, suitable for someone with basic knowledge of the topic.';
+        }
+
+        // Generate a random pattern for correct answers to encourage variation
+        $answerPattern = ['A', 'B', 'C', 'D'];
+        shuffle($answerPattern);
+        $suggestedAnswers = array_slice($answerPattern, 0, min($count, 4));
+        $answerHint = implode(', ', $suggestedAnswers);
+
+        return "Generate exactly {$count} multiple choice questions about: {$topic}
+
+INSTRUCTIONS:
+- {$difficultyInstructions}
+- Each question must have exactly 4 answer options labeled A, B, C, D
+- Only one option should be correct
+- Make questions clear and unambiguous
+- Focus on important concepts, not trivial details
+- Ensure all options are plausible but only one is correct
+
+CRITICAL ANSWER DISTRIBUTION REQUIREMENT:
+- DO NOT make all correct answers 'A'
+- Distribute correct answers across different options: {$answerHint}
+- For multiple questions, use different correct answers (A, B, C, D)
+- Avoid patterns - randomize which option is correct for each question
+
+REQUIRED OUTPUT FORMAT:
+Return ONLY a valid JSON array with this exact structure:
+
+[
+  {
+    \"question\": \"Your question here?\",
+    \"options\": {
+      \"A\": \"First option\",
+      \"B\": \"Second option\",
+      \"C\": \"Third option\",
+      \"D\": \"Fourth option\"
+    },
+    \"correct\": \"C\"
+  }
+]
+
+REMINDER: Mix up the correct answers - use A, B, C, and D in different questions.
+Do not include any text before or after the JSON. Start your response with [ and end with ].";
     }
 
     /**
@@ -380,12 +452,88 @@ Return only JSON:
                 }
             }
 
+            // Post-process to ensure answer variation
+            $questions = $this->redistributeCorrectAnswers($questions);
+
             return $questions;
 
         } catch (Exception $e) {
             Log::error('Question parsing error: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    /**
+     * Redistribute correct answers to ensure variation across A, B, C, D
+     */
+    protected function redistributeCorrectAnswers($questions)
+    {
+        if (empty($questions)) {
+            return $questions;
+        }
+
+        // Check if all answers are the same (common AI bias)
+        $correctAnswers = array_column($questions, 'correct');
+        $uniqueAnswers = array_unique($correctAnswers);
+
+        // If there's good variation already (3+ different answers), keep as is
+        if (count($uniqueAnswers) >= 3) {
+            return $questions;
+        }
+
+        // If all answers are the same or limited variation, redistribute
+        $options = ['A', 'B', 'C', 'D'];
+        $redistributed = [];
+
+        foreach ($questions as $index => $question) {
+            // For the first 4 questions, ensure we use each option once
+            if ($index < 4) {
+                $newCorrect = $options[$index];
+            } else {
+                // For additional questions, randomly select
+                $newCorrect = $options[array_rand($options)];
+            }
+
+            // If the correct answer is changing, we need to shuffle the options
+            if ($newCorrect !== $question['correct']) {
+                $question = $this->shuffleQuestionOptions($question, $newCorrect);
+            }
+
+            $redistributed[] = $question;
+        }
+
+        Log::info('Redistributed correct answers for better variation', [
+            'original_distribution' => array_count_values($correctAnswers),
+            'new_distribution' => array_count_values(array_column($redistributed, 'correct'))
+        ]);
+
+        return $redistributed;
+    }
+
+    /**
+     * Shuffle question options to make a different option correct
+     */
+    protected function shuffleQuestionOptions($question, $newCorrect)
+    {
+        $currentCorrect = $question['correct'];
+        $options = $question['options'];
+
+        // Get the text of the currently correct answer
+        $correctAnswerText = $options[$currentCorrect];
+
+        // Swap the correct answer text to the new position
+        $options[$newCorrect] = $correctAnswerText;
+
+        // Fill the old correct position with one of the other options
+        $otherOptions = array_diff_key($options, [$newCorrect => '']);
+        $replacementText = array_values($otherOptions)[0];
+        $options[$currentCorrect] = $replacementText;
+
+        // Update the question
+        $question['options'] = $options;
+        $question['correct'] = $newCorrect;
+
+        return $question;
     }
 
     /**
@@ -426,7 +574,7 @@ Return only JSON:
                 'Authorization: Bearer ' . $this->config['api_key'],
                 'Content-Type: application/json'
             ]);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 45);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // For Windows compatibility
 
             $data = [
@@ -529,31 +677,76 @@ Return only JSON:
     }
 
     /**
-     * Call OpenAI (for comparison)
+     * Call OpenAI GPT-3.5 Turbo
      */
     protected function callOpenAI($topic, $count, $difficulty)
     {
-        $prompt = $this->buildQuestionPrompt($topic, $count, $difficulty);
+        // Use specialized prompt for OpenAI
+        $prompt = $this->buildOpenAIPrompt($topic, $count, $difficulty);
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->config['api_key'],
-            'Content-Type' => 'application/json',
-        ])->post($this->config['api_url'], [
-            'model' => $this->config['model'],
-            'messages' => [
-                ['role' => 'system', 'content' => 'You are an expert quiz creator.'],
-                ['role' => 'user', 'content' => $prompt]
-            ],
-            'temperature' => 0.7,
-            'max_tokens' => 2000
-        ]);
+        try {
+            // Use cURL directly for better performance and compatibility
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->config['api_url']);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . $this->config['api_key'],
+                'Content-Type: application/json'
+            ]);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // For Windows compatibility
 
-        if ($response->successful()) {
-            $content = $response->json()['choices'][0]['message']['content'];
-            return $this->parseQuestions($content);
+            $data = [
+                'model' => $this->config['model'],
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => 'You are an expert educational quiz creator. You create high-quality multiple choice questions with exactly 4 options (A, B, C, D). Always respond with valid JSON format only.'
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $prompt
+                    ]
+                ],
+                'temperature' => 0.7,
+                'max_tokens' => 3000,
+                'top_p' => 1,
+                'frequency_penalty' => 0,
+                'presence_penalty' => 0
+            ];
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            if ($error) {
+                throw new Exception('cURL Error: ' . $error);
+            }
+
+            if ($httpCode === 200) {
+                $result = json_decode($response, true);
+                if (isset($result['choices'][0]['message']['content'])) {
+                    $content = $result['choices'][0]['message']['content'];
+                    Log::info('OpenAI API Success: Generated content', ['content' => substr($content, 0, 200)]);
+                    return $this->parseQuestions($content);
+                } else {
+                    throw new Exception('Invalid response format from OpenAI');
+                }
+            } else {
+                Log::error('OpenAI API Error', [
+                    'status' => $httpCode,
+                    'body' => $response
+                ]);
+                throw new Exception('OpenAI request failed with status: ' . $httpCode);
+            }
+        } catch (\Exception $e) {
+            Log::error('OpenAI API Exception', ['error' => $e->getMessage()]);
+            throw $e;
         }
-
-        throw new Exception('OpenAI request failed');
     }
 
     /**

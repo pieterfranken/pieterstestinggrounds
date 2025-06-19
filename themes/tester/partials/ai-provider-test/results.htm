@@ -1,0 +1,47 @@
+{% if test_result %}
+<div class="card {% if test_result == 'success' %}border-success{% else %}border-danger{% endif %}">
+    <div class="card-header {% if test_result == 'success' %}bg-success{% else %}bg-danger{% endif %} text-white">
+        <h5 class="mb-0">Test Results</h5>
+    </div>
+    <div class="card-body">
+        <div class="alert {% if test_result == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+            {{ test_message }}
+        </div>
+        
+        {% if test_result == 'success' and test_questions %}
+            <h6>Generated Questions:</h6>
+            {% for question in test_questions %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="card-title">Question {{ loop.index }}</h6>
+                    <p class="card-text"><strong>{{ question.question }}</strong></p>
+                    
+                    <div class="row">
+                        {% for key, option in question.options %}
+                        <div class="col-md-6 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" disabled {% if key == question.correct %}checked{% endif %}>
+                                <label class="form-check-label {% if key == question.correct %}text-success fw-bold{% endif %}">
+                                    {{ key }}. {{ option }}
+                                    {% if key == question.correct %}<i class="bi bi-check-circle text-success"></i>{% endif %}
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <small class="text-muted">Correct Answer: {{ question.correct }}</small>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="mt-3">
+                <small class="text-muted">
+                    <i class="bi bi-clock"></i> Response Time: {{ test_duration }} seconds
+                    | <i class="bi bi-cpu"></i> Provider: {{ test_provider|title }}
+                </small>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

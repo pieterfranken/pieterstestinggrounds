@@ -250,9 +250,10 @@ class ProgressDashboard extends ComponentBase
         $topic = post('topic', 'General Knowledge');
         $difficulty = post('difficulty', 'medium');
         $count = (int) post('count', 10);
+        $aiProvider = post('ai_provider', 'groq');
 
         try {
-            $aiService = new AIQuizService();
+            $aiService = new AIQuizService($aiProvider);
             $questions = $aiService->generateQuestions($topic, $count, $difficulty);
 
             // Store in session for quiz taking

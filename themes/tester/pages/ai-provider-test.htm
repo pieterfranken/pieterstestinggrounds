@@ -1,0 +1,118 @@
+##
+title = "AI Provider Test"
+url = "/ai-provider-test"
+layout = "home"
+==
+<?
+function onTestProvider()
+{
+    $provider = post('provider', 'groq');
+    $topic = post('topic', 'JavaScript Programming');
+    $difficulty = post('difficulty', 'medium');
+    $count = (int) post('count', 1);
+    
+    try {
+        $startTime = microtime(true);
+        
+        $aiService = new \PTG\Quiz\Services\AIQuizService($provider);
+        $questions = $aiService->generateQuestions($topic, $count, $difficulty);
+        
+        $endTime = microtime(true);
+        $duration = round($endTime - $startTime, 2);
+        
+        $this['test_result'] = 'success';
+        $this['test_message'] = "✅ {$provider} generated {$count} question(s) in {$duration} seconds";
+        $this['test_questions'] = $questions;
+        $this['test_duration'] = $duration;
+        $this['test_provider'] = $provider;
+        
+    } catch (\Exception $e) {
+        $this['test_result'] = 'error';
+        $this['test_message'] = "❌ {$provider} failed: " . $e->getMessage();
+        $this['test_questions'] = [];
+        $this['test_duration'] = 0;
+        $this['test_provider'] = $provider;
+    }
+    
+    return [
+        '#test-results' => $this->renderPartial('ai-provider-test/results')
+    ];
+}
+?>
+==
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">🧪 AI Provider Test</h3>
+                    <small>Test both Groq and OpenAI providers directly</small>
+                </div>
+                <div class="card-body">
+                    <form 
+                        data-request="onTestProvider"
+                        data-request-loading="Testing..."
+                        data-request-timeout="90000"
+                    >
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="provider" class="form-label">AI Provider</label>
+                                    <select class="form-select" id="provider" name="provider">
+                                        <option value="groq">Groq (Llama 3 70B) - Free</option>
+                                        <option value="openai">OpenAI (GPT-3.5 Turbo) - Paid</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="topic" class="form-label">Topic</label>
+                                    <input type="text" class="form-control" id="topic" name="topic" value="JavaScript Programming">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="difficulty" class="form-label">Difficulty</label>
+                                    <select class="form-select" id="difficulty" name="difficulty">
+                                        <option value="easy">Easy</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="hard">Hard</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="count" class="form-label">Questions</label>
+                                    <select class="form-select" id="count" name="count">
+                                        <option value="1" selected>1 Question</option>
+                                        <option value="2">2 Questions</option>
+                                        <option value="3">3 Questions</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                🧪 Test Provider
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="test-results" class="mt-4">
+                        <!-- Results will appear here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <a href="{{ 'ai-quiz'|page }}" class="btn btn-success">
+                    🚀 Go to AI Quiz Generator
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -59,6 +59,7 @@ class AIQuizGenerator extends ComponentBase
         $topic = post('topic', $this->property('defaultTopic'));
         $difficulty = post('difficulty', 'medium');
         $count = (int) post('count', $this->property('defaultCount'));
+        $aiProvider = post('ai_provider', 'groq');
 
         // Validate inputs
         if (empty($topic)) {
@@ -69,8 +70,14 @@ class AIQuizGenerator extends ComponentBase
             throw new \ValidationException(['count' => 'Question count must be between 1 and 20']);
         }
 
+        // Validate AI provider
+        $allowedProviders = ['groq', 'openai'];
+        if (!in_array($aiProvider, $allowedProviders)) {
+            throw new \ValidationException(['ai_provider' => 'Invalid AI provider selected']);
+        }
+
         try {
-            $aiService = new AIQuizService();
+            $aiService = new AIQuizService($aiProvider);
             $questions = $aiService->generateQuestions($topic, $count, $difficulty);
             
             // Add IDs to questions for form handling
@@ -82,6 +89,7 @@ class AIQuizGenerator extends ComponentBase
             Session::put('ai_generated_quiz', $questions);
             Session::put('ai_quiz_topic', $topic);
             Session::put('ai_quiz_difficulty', $difficulty);
+            Session::put('ai_quiz_provider', $aiProvider);
             
             $this->page['currentQuiz'] = $questions;
             $this->page['showQuiz'] = true;
@@ -107,6 +115,7 @@ class AIQuizGenerator extends ComponentBase
         $questions = Session::get('ai_generated_quiz', []);
         $topic = Session::get('ai_quiz_topic', 'Unknown');
         $difficulty = Session::get('ai_quiz_difficulty', 'medium');
+        $aiProvider = Session::get('ai_quiz_provider', 'groq');
 
         if (empty($questions)) {
             return Redirect::to('/ai-quiz');
@@ -114,7 +123,7 @@ class AIQuizGenerator extends ComponentBase
 
         $score = 0;
         $results = [];
-        $aiService = new AIQuizService();
+        $aiService = new AIQuizService($aiProvider);
 
         foreach ($questions as $question) {
             $questionId = $question['id'];
@@ -171,7 +180,7 @@ class AIQuizGenerator extends ComponentBase
         }
 
         // Clear session
-        Session::forget(['ai_generated_quiz', 'ai_quiz_topic', 'ai_quiz_difficulty']);
+        Session::forget(['ai_generated_quiz', 'ai_quiz_topic', 'ai_quiz_difficulty', 'ai_quiz_provider']);
 
         $this->page['results'] = $results;
         $this->page['score'] = $score;
@@ -191,10 +200,10 @@ class AIQuizGenerator extends ComponentBase
      */
     public function onResetQuiz()
     {
-        Session::forget(['ai_generated_quiz', 'ai_quiz_topic', 'ai_quiz_difficulty']);
-        
+        Session::forget(['ai_generated_quiz', 'ai_quiz_topic', 'ai_quiz_difficulty', 'ai_quiz_provider']);
+
         $this->prepareVars();
-        
+
         return [
             '#ai-quiz-container' => $this->renderPartial('ai-quiz/generator-form'),
             '#quiz-status' => ''

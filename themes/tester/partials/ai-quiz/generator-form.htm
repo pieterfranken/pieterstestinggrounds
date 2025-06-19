@@ -8,10 +8,11 @@
             <small class="opacity-75">Generate custom quizzes on any topic using AI</small>
         </div>
         <div class="card-body">
-            <form 
+            <form
                 data-request="onGenerateQuiz"
                 data-request-loading="#loading-spinner"
                 data-request-error="alert('Failed to generate quiz. Please try again.');"
+                data-request-timeout="90000"
             >
                 <div class="row">
                     <div class="col-md-8">
@@ -63,6 +64,21 @@
                                 <option value="medium" selected>Medium - Standard knowledge</option>
                                 <option value="hard">Hard - Advanced topics</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="ai_provider" class="form-label">
+                                <i class="bi bi-cpu me-1"></i>
+                                AI Provider
+                            </label>
+                            <select class="form-select" id="ai_provider" name="ai_provider">
+                                <option value="groq" selected>Groq (Llama 3 70B) - Free</option>
+                                <option value="openai">OpenAI (GPT-3.5 Turbo) - Paid</option>
+                            </select>
+                            <div class="form-text">
+                                Choose your preferred AI model for quiz generation
+                            </div>
                         </div>
                     </div>
                 </div>
