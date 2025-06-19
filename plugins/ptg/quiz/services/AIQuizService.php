@@ -338,8 +338,12 @@ class AIQuizService
 
         return "Create {$count} multiple choice questions about {$topic}.{$difficultyNote} Focus on core concepts, not recent updates.
 
-CRITICAL: Each question must have exactly 4 options (A, B, C, D). Never use fewer than 4 options.
-IMPORTANT: Vary the correct answers - don't always use A. Mix between A, B, C, and D randomly.
+CRITICAL REQUIREMENTS:
+- Each question must have exactly 4 options (A, B, C, D). Never use fewer than 4 options.
+- ACCURACY IS PARAMOUNT: Ensure all correct answers are factually accurate and verifiable
+- Double-check your knowledge before marking an answer as correct
+- Make incorrect options plausible but clearly wrong to someone with proper knowledge
+- Vary the correct answers - don't always use A. Mix between A, B, C, and D randomly.
 
 Return only JSON:
 [
@@ -355,6 +359,7 @@ Return only JSON:
   }
 ]
 
+ACCURACY CHECK: Before finalizing, verify that your marked correct answer is actually correct.
 Remember: Distribute correct answers randomly among A, B, C, and D options.";
     }
 
@@ -391,6 +396,12 @@ INSTRUCTIONS:
 - Focus on important concepts, not trivial details
 - Ensure all options are plausible but only one is correct
 
+ACCURACY REQUIREMENTS:
+- CRITICAL: Verify that your marked correct answer is factually accurate
+- Double-check your knowledge before selecting the correct option
+- Ensure incorrect options are clearly wrong to someone with proper knowledge
+- Base answers on well-established facts, not opinions or recent changes
+
 CRITICAL ANSWER DISTRIBUTION REQUIREMENT:
 - DO NOT make all correct answers 'A'
 - Distribute correct answers across different options: {$answerHint}
@@ -413,7 +424,7 @@ Return ONLY a valid JSON array with this exact structure:
   }
 ]
 
-REMINDER: Mix up the correct answers - use A, B, C, and D in different questions.
+FINAL CHECK: Before submitting, confirm your correct answers are actually correct.
 Do not include any text before or after the JSON. Start your response with [ and end with ].";
     }
 
@@ -580,10 +591,10 @@ Do not include any text before or after the JSON. Start your response with [ and
             $data = [
                 'model' => $this->config['model'],
                 'messages' => [
-                    ['role' => 'system', 'content' => 'You are an expert quiz creator. Generate high-quality multiple choice questions in valid JSON format.'],
+                    ['role' => 'system', 'content' => 'You are an expert quiz creator who prioritizes accuracy above all else. Generate high-quality, factually correct multiple choice questions in valid JSON format. Always verify your correct answers are actually correct.'],
                     ['role' => 'user', 'content' => $prompt]
                 ],
-                'temperature' => 0.7,
+                'temperature' => 0.2,
                 'max_tokens' => 2000
             ];
 
@@ -633,10 +644,10 @@ Do not include any text before or after the JSON. Start your response with [ and
         ])->post($this->config['api_url'], [
             'model' => $this->config['model'],
             'messages' => [
-                ['role' => 'system', 'content' => 'You are an expert quiz creator.'],
+                ['role' => 'system', 'content' => 'You are an expert quiz creator who prioritizes factual accuracy. Always verify your correct answers are actually correct.'],
                 ['role' => 'user', 'content' => $prompt]
             ],
-            'temperature' => 0.7,
+            'temperature' => 0.2,
             'max_tokens' => 2000
         ]);
 
@@ -662,7 +673,7 @@ Do not include any text before or after the JSON. Start your response with [ and
             'inputs' => $prompt,
             'parameters' => [
                 'max_length' => 2000,
-                'temperature' => 0.7,
+                'temperature' => 0.2,
                 'return_full_text' => false
             ]
         ]);
@@ -702,14 +713,14 @@ Do not include any text before or after the JSON. Start your response with [ and
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => 'You are an expert educational quiz creator. You create high-quality multiple choice questions with exactly 4 options (A, B, C, D). Always respond with valid JSON format only.'
+                        'content' => 'You are an expert educational quiz creator who prioritizes factual accuracy. You create high-quality, factually correct multiple choice questions with exactly 4 options (A, B, C, D). Always verify your correct answers are actually correct before responding. Always respond with valid JSON format only.'
                     ],
                     [
                         'role' => 'user',
                         'content' => $prompt
                     ]
                 ],
-                'temperature' => 0.7,
+                'temperature' => 0.2,
                 'max_tokens' => 3000,
                 'top_p' => 1,
                 'frequency_penalty' => 0,
